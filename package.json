@@ -19,7 +19,7 @@
     "eject": "react-scripts eject",
     "rm": "rm -rf docs",
     "mv": "mv build docs",
-    "git": "git add . && git commit -m 'deploy' && git push origin main",
+    "git": "git add . && git commit -m 'deploy' && git push origin master",
     "deploy": "npm run rm && npm run build && npm run mv && npm run git"
   },
   "eslintConfig": {
