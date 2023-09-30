@@ -3,12 +3,12 @@ import { useState } from "react";
 import { db } from "../firebase";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 
-function AddTask({ onClose, open }) {
+function AddEvent({ onClose, open, facebookData }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
-  const [members, setMembers] = useState(['Thanh-123', 'Nguyen-456']);
-  const [createdBy, setCreatedBy] = useState("Thanh");
+  const [members, setMembers] = useState([]);
+  const [createdBy, setCreatedBy] = useState(facebookData.name + '-' + facebookData.id);
 
   /* function to add new task to firestore */
   const handleSubmit = async (e) => {
@@ -91,4 +91,4 @@ function AddTask({ onClose, open }) {
   );
 }
 
-export default AddTask;
+export default AddEvent;

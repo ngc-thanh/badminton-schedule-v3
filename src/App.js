@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebase";
 
-import AddTask from "./components/AddTask";
+import AddEvent from "./components/AddEvent";
 import Event from "./components/Event";
 import "./App.css";
 
@@ -99,7 +99,11 @@ function App() {
         </button>
       </div>
       {openAddModal && (
-        <AddTask onClose={() => setOpenAddModal(false)} open={openAddModal} />
+        <AddEvent
+          onClose={() => setOpenAddModal(false)}
+          open={openAddModal}
+          facebookData={facebookData}
+        />
       )}
       <div className="container mx-auto py-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">

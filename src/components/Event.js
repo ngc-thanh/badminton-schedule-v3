@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const Card = ({
+const Event = ({
   id,
   time,
   description,
@@ -83,4 +83,4 @@ const Card = ({
   );
 };
 
-export default Card;
+export default Event;
