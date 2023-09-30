@@ -18,7 +18,7 @@ function AddEvent({ onClose, open }) {
     try {
       await addDoc(collection(db, "events"), {
         title: title,
-        time: Timestamp.fromDate(new Date(time)),
+        time: "",
         description: description,
         amount: amount,
         members: members,
