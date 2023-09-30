@@ -49,7 +49,7 @@ function AddEvent({ onClose, open }) {
             name="title"
             onChange={(e) => setTitle(e.target.value.toUpperCase())}
             value={title}
-            placeholder="Enter title"
+            placeholder="THỨ 7, 30/9, 19-21H"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
           />
         </div>
@@ -66,7 +66,7 @@ function AddEvent({ onClose, open }) {
             name="time"
             onChange={(e) => setTime(e.target.value)}
             value={time}
-            placeholder="Enter time"
+            placeholder="2023/09/30"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
           />
         </div>
@@ -80,7 +80,7 @@ function AddEvent({ onClose, open }) {
           <input
             id="description"
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter event description"
+            placeholder="戸田スポーツセンター"
             value={description}
             rows="4"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
@@ -96,7 +96,7 @@ function AddEvent({ onClose, open }) {
           <input
             id="amount"
             onChange={(e) => setAmount(e.target.value)}
-            placeholder="Enter amount"
+            placeholder="2"
             value={amount}
             rows="4"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none "
@@ -112,7 +112,7 @@ function AddEvent({ onClose, open }) {
           <textarea
             id="note"
             onChange={(e) => setNote(e.target.value)}
-            placeholder="Enter note"
+            placeholder="Anh em nhớ đăng ký sớm"
             value={note}
             rows="4"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none "

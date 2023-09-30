@@ -16,32 +16,35 @@ import { db } from "./firebase";
 import AddEvent from "./components/AddEvent";
 import Event from "./components/Event";
 import User from "./components/User";
+import UnlockModal from "./components/UnlockModal";
 import "./App.css";
 
 function App() {
   const [openAddModal, setOpenAddModal] = useState(false);
+  const [openUnlockModal, setOpenUnlockModal] = useState(false);
   const [events, setEvents] = useState([]);
   const [users, setUsers] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [currentIp, setCurrentIp] = useState("");
+  const [isNewUser, setIsNewUser] = useState(false);
 
   const handleOkClick = (cardData) => {
     const newMember = cardData.members[cardData.members.length - 1];
-    if (users.length === 0) {
+    if (isNewUser) {
       createUser(newMember);
+      setIsNewUser(false);
     } else {
-      let isNewUser = false;
-
       for (let i = 0; i < users.length; i++) {
         if (users[i].data.ipAddress === currentIp) {
           break;
+        } else {
+          setIsNewUser(true);
         }
-
-        isNewUser = true;
       }
 
       if (isNewUser) {
         createUser(newMember);
+        setIsNewUser(false);
       }
     }
 
@@ -58,6 +61,14 @@ function App() {
 
   const handleDoneClick = (cardData) => {
     handleUpdateEvent(cardData);
+  };
+
+  const handleUnlockClick = (password) => {
+    console.log(password);
+    if (password === process.env.REACT_APP_PASSWORD) {
+      setOpenUnlockModal(false);
+      setIsAdmin(true);
+    }
   };
 
   const handleUpdateUser = async (ok, cancel) => {
@@ -131,6 +142,25 @@ function App() {
     }
   };
 
+  const checkRecordExists = (
+    collectionName,
+    fieldNameToCheck,
+    valueToCheck
+  ) => {
+    const q = query(
+      collection(db, collectionName),
+      where(fieldNameToCheck, "==", valueToCheck)
+    );
+
+    // Return a promise that resolves to true if the record exists, false otherwise
+    return getDocs(q)
+      .then((querySnapshot) => !querySnapshot.empty)
+      .catch((error) => {
+        console.error("Error checking record existence:", error);
+        return false; // Return false in case of an error
+      });
+  };
+
   useEffect(() => {
     const eventColRef = query(
       collection(db, "events"),
@@ -167,22 +197,45 @@ function App() {
             data.ipAddress === process.env.REACT_APP_IPV6_ADDRESS
         );
       });
+
+    checkRecordExists("users", "ipAddress", currentIp)
+      .then((exists) => {
+        setIsNewUser(exists);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   }, []);
 
   return (
     <div className="App">
       <div className="flex flex-col justify-center items-center">
-        {isAdmin && (
+        {isAdmin ? (
           <button
             onClick={() => setOpenAddModal(true)}
             className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md font-semibold transition duration-300 ease-in-out w-30 mt-5"
           >
             Thêm sân +
           </button>
+        ) : (
+          <button
+            onClick={() => setOpenUnlockModal(true)}
+            className="px-4 py-2 bg-red-300 hover:bg-red-600 text-white rounded-md font-semibold transition duration-300 ease-in-out w-30 mt-5"
+          >
+            MỞ KHÓA
+          </button>
         )}
       </div>
       {openAddModal && (
         <AddEvent onClose={() => setOpenAddModal(false)} open={openAddModal} />
+      )}
+
+      {openUnlockModal && (
+        <UnlockModal
+          onClose={() => setOpenUnlockModal(false)}
+          open={openUnlockModal}
+          onUnlock={handleUnlockClick}
+        />
       )}
       <div className="container mx-auto py-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-8">
