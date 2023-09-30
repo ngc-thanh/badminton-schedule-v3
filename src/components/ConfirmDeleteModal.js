@@ -11,7 +11,7 @@ const ConfirmDeleteModal = ({
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-70">
-      <div className="bg-white p-4 rounded-lg shadow-md w-1/5">
+      <div className="bg-white p-4 rounded-lg shadow-md w-11/12 lg:w-3/5">
         <div className="mb-4">
           <h2 className="text-xl font-semibold">{title}</h2>
         </div>
