@@ -3,35 +3,31 @@ import React, { useState, useEffect } from "react";
 const Card = ({
   id,
   time,
-  address,
+  description,
   amount,
   members,
   onOkClick,
   onCancelClick,
   facebookData,
 }) => {
-  const [memberData, setMemberData] = useState([]);
   const handleOkClick = () => {
-    const name = facebookData.name + "-" + facebookData.id;
-    if (memberData && memberData.length > 0) {
-      members = [...memberData, name];
-    } else {
-      members = [name];
-    }
-    setMemberData(members);
-    onOkClick({ id, time, address, amount, members });
+    const name = facebookData.name + '-' + facebookData.id;
+    const newMembers = [...members, name];
+    members = newMembers;
+    onOkClick({ id, time, description, amount, members });
   };
 
   const handleCancelClick = () => {
-    setMemberData(memberData.filter((item) => !item.includes(facebookData.id)));
-    onCancelClick({ id, time, address, amount, members });
+    const newMembers = members.filter((member) => !member.includes(facebookData.id))
+    members = newMembers;
+    onCancelClick({ id, time, description, amount, members });
   };
 
   let isDisplayed = false;
 
-  if (memberData && memberData.length > 0) {
-    for (let i = 0; i < memberData.length; i++) {
-      if (memberData[i].includes(facebookData.id)) {
+  if (members && members.length > 0) {
+    for (let i = 0; i < members.length; i++) {
+      if (members[i].includes(facebookData.id)) {
         isDisplayed = true;
         break;
       }
@@ -39,11 +35,6 @@ const Card = ({
   }
 
   useEffect(() => {
-    if (members.length > 1) {
-      setMemberData(members.split(","));
-    } else {
-      setMemberData([members]);
-    }
   }, []);
 
   return (
@@ -51,7 +42,7 @@ const Card = ({
       <div className="mb-4 flex-grow">
         <div>
           <h2 className="text-xl font-semibold text-left">{time}</h2>
-          <p className="text-gray-500 text-left">{address}</p>
+          <p className="text-gray-500 text-left">{description}</p>
         </div>
         <div className="mb-4">
           <p className="text-lg font-semibold text-left">{amount} sân</p>
@@ -59,8 +50,8 @@ const Card = ({
         <div>
           <h3 className="text-lg font-semibold text-left">Đăng ký tham gia:</h3>
           <ul className="list-disc list-inside">
-            {memberData &&
-              memberData.map((member, index) => {
+            {members &&
+              members.map((member, index) => {
                 const name = member.split("-")[0];
                 return (
                   <li key={index} className="text-left">
