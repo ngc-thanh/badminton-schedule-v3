@@ -20,6 +20,13 @@ const Event = ({
     setName("");
   };
 
+  const handleInputKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      // If the Enter key is pressed, submit the form
+      handleOkClick();
+    }
+  };
+
   const [name, setName] = useState("");
   const [deleteData, setDeleteData] = useState({});
 
@@ -49,7 +56,7 @@ const Event = ({
 
   const handleDeleteConfirm = () => {
     // Handle delete logic here
-    // ...
+    handleCancelClick(deleteData.index);
 
     // Close the modal
     setDeleteModalOpen(false);
@@ -58,7 +65,6 @@ const Event = ({
   const handleDeleteCancel = (member, index) => {
     // Close the modal without performing the delete action
     setDeleteModalOpen(false);
-    // handleCancelClick(index);
   };
 
   return (
@@ -112,6 +118,7 @@ const Event = ({
           onChange={(e) => setName(e.target.value)}
           rows="4"
           value={name}
+          onKeyPress={handleInputKeyPress}
           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none mb-3"
         ></input>
         <button
