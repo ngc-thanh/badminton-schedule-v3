@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ConfirmDeleteModal from "./ConfirmDeleteModal";
 
 const Event = ({
   id,
@@ -20,6 +21,7 @@ const Event = ({
   };
 
   const [name, setName] = useState("");
+  const [deleteData, setDeleteData] = useState({});
 
   const handleCancelClick = (indexToRemove) => {
     const updatedMembers = members.filter(
@@ -32,6 +34,31 @@ const Event = ({
   const handleDoneClick = () => {
     completed = true;
     onDoneClick({ id, title, description, amount, members, completed });
+  };
+
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+
+  const handleDeleteClick = (index) => {
+    setDeleteModalOpen(true);
+    setDeleteData({
+      title: title,
+      index: index,
+      member: members[index],
+    });
+  };
+
+  const handleDeleteConfirm = () => {
+    // Handle delete logic here
+    // ...
+
+    // Close the modal
+    setDeleteModalOpen(false);
+  };
+
+  const handleDeleteCancel = (member, index) => {
+    // Close the modal without performing the delete action
+    setDeleteModalOpen(false);
+    // handleCancelClick(index);
   };
 
   return (
@@ -69,7 +96,7 @@ const Event = ({
                   </li>
                   <button
                     className="pr-5 font-semibold text-lg text-red-500"
-                    onClick={() => handleCancelClick(index)}
+                    onClick={() => handleDeleteClick(index)}
                   >
                     X
                   </button>
@@ -94,6 +121,13 @@ const Event = ({
           THAM GIA
         </button>
       </div>
+      <ConfirmDeleteModal
+        title="XÁC NHẬN HỦY"
+        deleteData={deleteData}
+        isOpen={isDeleteModalOpen}
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+      />
     </div>
   );
 };

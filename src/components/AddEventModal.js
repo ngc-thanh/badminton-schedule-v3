@@ -1,4 +1,4 @@
-function Modal({ open, modalLabel, children, custom_modal, onClose }) {
+function AddEventModal({ open, modalLabel, children, custom_modal, onClose }) {
   const handleClose = (e) => {
     if (e.target.className === "modalContainer") {
       onClose();
@@ -30,4 +30,4 @@ function Modal({ open, modalLabel, children, custom_modal, onClose }) {
   return null;
 }
 
-export default Modal;
+export default AddEventModal;

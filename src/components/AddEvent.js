@@ -1,4 +1,4 @@
-import Modal from "./Modal";
+import AddEventModal from "./AddEventModal";
 import { useState } from "react";
 import { db } from "../firebase";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
@@ -34,7 +34,7 @@ function AddEvent({ onClose, open }) {
   };
 
   return (
-    <Modal modalLabel="Add Event" onClose={onClose} open={open}>
+    <AddEventModal modalLabel="Add Event" onClose={onClose} open={open}>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="mb-4">
           <label
@@ -125,7 +125,7 @@ function AddEvent({ onClose, open }) {
           Done
         </button>
       </form>
-    </Modal>
+    </AddEventModal>
   );
 }
 
