@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 const Event = ({
   id,
-  time,
+  title,
   description,
   amount,
   members,
@@ -15,7 +15,7 @@ const Event = ({
 }) => {
   const handleOkClick = () => {
     members.push(name);
-    onOkClick({ id, time, description, amount, members, completed });
+    onOkClick({ id, title, description, amount, members, completed });
     setName("");
   };
 
@@ -26,19 +26,19 @@ const Event = ({
       (_, index) => index !== indexToRemove
     );
     members = updatedMembers;
-    onCancelClick({ id, time, description, amount, members, completed });
+    onCancelClick({ id, title, description, amount, members, completed });
   };
 
   const handleDoneClick = () => {
     completed = true;
-    onDoneClick({ id, time, description, amount, members, completed });
+    onDoneClick({ id, title, description, amount, members, completed });
   };
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-4 mx-2 sm:mx-4 md:mx-6 lg:mx-8 xl:mx-10 h-full flex flex-col">
       <div className="mb-4 flex-grow">
         <div>
-          <h2 className="text-xl font-semibold text-left">{time}</h2>
+          <h2 className="text-xl font-semibold text-left">{title}</h2>
           <p className="text-gray-500 text-left">{description}</p>
         </div>
         <div className="mb-4">
@@ -88,7 +88,7 @@ const Event = ({
           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none mb-3"
         ></input>
         <button
-          className="bg-green-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-green-600"
+          className="bg-green-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-green-600 tex"
           onClick={handleOkClick}
         >
           THAM GIA

@@ -47,11 +47,13 @@ function App() {
 
     handleUpdateEvent(cardData);
     handleUpdateUser(1, 0);
+    createBookingDetail(true, cardData.title, cardData.id);
   };
 
   const handleCancelClick = (cardData) => {
     handleUpdateEvent(cardData);
     handleUpdateUser(0, 1);
+    createBookingDetail(false, cardData.title, cardData.id);
   };
 
   const handleDoneClick = (cardData) => {
@@ -93,6 +95,20 @@ function App() {
       await updateDoc(eventDocRef, {
         completed: cardData.completed,
         members: cardData.members,
+      });
+    } catch (err) {
+      alert(err);
+    }
+  };
+
+  const createBookingDetail = async (ok, title, eventId) => {
+    try {
+      await addDoc(collection(db, "booking_details"), {
+        type: ok ? "OK" : "CANCEL",
+        title: title,
+        ipAddress: currentIp,
+        eventId: eventId,
+        created: Timestamp.now(),
       });
     } catch (err) {
       alert(err);
@@ -176,7 +192,7 @@ function App() {
                 <Event
                   id={event.id}
                   key={event.id}
-                  time={event.data.title}
+                  title={event.data.title}
                   description={event.data.description}
                   amount={event.data.amount}
                   members={event.data.members}
