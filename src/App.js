@@ -108,7 +108,7 @@ function App() {
         members: cardData.members,
       });
     } catch (err) {
-      alert(err);
+      alert('handleUpdateEvent error: ' + err);
     }
   };
 
@@ -122,7 +122,7 @@ function App() {
         created: Timestamp.now(),
       });
     } catch (err) {
-      alert(err);
+      alert('createBookingDetail error: ' + err);
     }
   };
 
@@ -138,7 +138,7 @@ function App() {
         created: Timestamp.now(),
       });
     } catch (err) {
-      alert(err);
+      alert('createUser error: ' + err);
     }
   };
 
@@ -156,7 +156,7 @@ function App() {
     return getDocs(q)
       .then((querySnapshot) => !querySnapshot.empty)
       .catch((error) => {
-        console.error("Error checking record existence:", error);
+        console.error("Error checkRecordExists: ", error);
         return false; // Return false in case of an error
       });
   };
@@ -203,7 +203,7 @@ function App() {
         setIsNewUser(exists);
       })
       .catch((error) => {
-        console.error("Error:", error);
+        console.error("checkRecordExists Error:", error);
       });
   }, []);
 

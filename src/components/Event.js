@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 
 const Event = ({
@@ -20,8 +20,10 @@ const Event = ({
     setName("");
   };
 
+  const [isDisabled, setIsDisabled] = useState(false);
+
   const handleInputKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       // If the Enter key is pressed, submit the form
       handleOkClick();
     }
@@ -67,6 +69,10 @@ const Event = ({
     setDeleteModalOpen(false);
   };
 
+  useEffect(() => {
+    setIsDisabled(members.length >= amount * 4 + 4);
+  }, [members]);
+
   return (
     <div className="bg-white shadow-lg rounded-lg p-4 mx-2 sm:mx-4 md:mx-6 lg:mx-8 xl:mx-10 h-full flex flex-col">
       <div className="mb-4 flex-grow">
@@ -75,7 +81,9 @@ const Event = ({
           <p className="text-gray-500 text-left">{description}</p>
         </div>
         <div className="mb-4">
-          <p className="text-lg font-semibold text-left">{amount} sân</p>
+          <p className="text-lg font-semibold text-left">
+            {amount} sân (full {amount * 4 + 4} người)
+          </p>
         </div>
         <div className="mb-4">
           <h2 className="text-lg font-semibold text-left">Ghi chú</h2>
@@ -122,10 +130,15 @@ const Event = ({
           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none mb-3"
         ></input>
         <button
-          className="bg-green-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-green-600 tex"
+          className={`text-white px-4 py-2 rounded-md mr-2 ${
+            isDisabled
+              ? "opacity-50 cursor-not-allowed bg-gray-500"
+              : "bg-green-500 hover:bg-green-600"
+          }`}
           onClick={handleOkClick}
+          disabled={isDisabled}
         >
-          THAM GIA
+          {isDisabled ? "FULL" : "THAM GIA"}
         </button>
       </div>
       <ConfirmDeleteModal

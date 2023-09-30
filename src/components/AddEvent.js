@@ -8,8 +8,8 @@ function AddEvent({ onClose, open }) {
   const [time, setTime] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
-  const [members, setMembers] = useState([]);
-  const [createdBy, setCreatedBy] = useState("Thanh");
+  const [members, _setMembers] = useState([]);
+  const [createdBy, _setCreatedBy] = useState("Thanh");
   const [note, setNote] = useState("");
 
   /* function to add new task to firestore */
@@ -18,7 +18,7 @@ function AddEvent({ onClose, open }) {
     try {
       await addDoc(collection(db, "events"), {
         title: title,
-        time: "",
+        time: new Date(time),
         description: description,
         amount: amount,
         members: members,
@@ -29,7 +29,7 @@ function AddEvent({ onClose, open }) {
       });
       onClose();
     } catch (err) {
-      alert(err);
+      alert('Create event failed: ' + err);
     }
   };
 
