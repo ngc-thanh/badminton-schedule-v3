@@ -164,7 +164,7 @@ function App() {
   useEffect(() => {
     const eventColRef = query(
       collection(db, "events"),
-      orderBy("created", "asc")
+      orderBy("time", "asc")
     );
     onSnapshot(eventColRef, (snapshot) => {
       setEvents(
