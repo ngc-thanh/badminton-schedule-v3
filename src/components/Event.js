@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 const Event = ({
   id,
@@ -7,41 +7,32 @@ const Event = ({
   amount,
   members,
   completed,
+  note,
   onOkClick,
   onCancelClick,
   onDoneClick,
-  fbData,
   isAdmin,
 }) => {
   const handleOkClick = () => {
-    const name = fbData.name + "-" + fbData.id;
-    const newMembers = [...members, name];
-    members = newMembers;
+    members.push(name);
     onOkClick({ id, time, description, amount, members, completed });
+    setName("");
   };
 
-  const handleCancelClick = () => {
-    const newMembers = members.filter((member) => !member.includes(fbData.id));
-    members = newMembers;
+  const [name, setName] = useState("");
+
+  const handleCancelClick = (indexToRemove) => {
+    const updatedMembers = members.filter(
+      (_, index) => index !== indexToRemove
+    );
+    members = updatedMembers;
     onCancelClick({ id, time, description, amount, members, completed });
   };
 
   const handleDoneClick = () => {
-    console.log('handle done event');
     completed = true;
     onDoneClick({ id, time, description, amount, members, completed });
   };
-
-  let isDisplayed = false;
-
-  if (members && members.length > 0) {
-    for (let i = 0; i < members.length; i++) {
-      if (members[i].includes(fbData.id)) {
-        isDisplayed = true;
-        break;
-      }
-    }
-  }
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-4 mx-2 sm:mx-4 md:mx-6 lg:mx-8 xl:mx-10 h-full flex flex-col">
@@ -52,6 +43,10 @@ const Event = ({
         </div>
         <div className="mb-4">
           <p className="text-lg font-semibold text-left">{amount} sân</p>
+        </div>
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold text-left">Ghi chú</h2>
+          <p className="text-left">{note}</p>
         </div>
         {isAdmin && (
           <div className="mb-4 text-left">
@@ -65,35 +60,39 @@ const Event = ({
         )}
         <div>
           <h3 className="text-lg font-semibold text-left">Đăng ký tham gia:</h3>
-          <ul className="list-disc list-inside">
+          <ul className="list-disc list-inside list-none">
             {members &&
-              members.map((member, index) => {
-                const name = member.split("-")[0];
-                return (
-                  <li key={index} className="text-left">
-                    {name}
+              members.map((member, index) => (
+                <div key={index} className="flex justify-between">
+                  <li className="text-left">
+                    {index + 1}. {member}
                   </li>
-                );
-              })}
+                  <button
+                    className="pr-5 font-semibold text-lg text-red-500"
+                    onClick={() => handleCancelClick(index)}
+                  >
+                    X
+                  </button>
+                </div>
+              ))}
           </ul>
         </div>
       </div>
       <div className="mt-auto">
-        {isDisplayed ? (
-          <button
-            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-            onClick={handleCancelClick}
-          >
-            KHÔNG THAM GIA
-          </button>
-        ) : (
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-green-600"
-            onClick={handleOkClick}
-          >
-            THAM GIA
-          </button>
-        )}
+        <input
+          id="name"
+          placeholder="Enter your name"
+          onChange={(e) => setName(e.target.value)}
+          rows="4"
+          value={name}
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none mb-3"
+        ></input>
+        <button
+          className="bg-green-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-green-600"
+          onClick={handleOkClick}
+        >
+          THAM GIA
+        </button>
       </div>
     </div>
   );

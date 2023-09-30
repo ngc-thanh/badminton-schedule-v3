@@ -13,7 +13,13 @@ const User = ({ users }) => {
               Point
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              Facebook ID
+              OK
+            </th>
+            <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              CANCEL
+            </th>
+            <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              IP Address
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
               Created At
@@ -39,7 +45,17 @@ const User = ({ users }) => {
                   </td>
                   <td className="px-6 py-4 whitespace-no-wrap text-left">
                     <div className="text-sm leading-5 text-gray-900">
-                      {user.data.fbId}
+                      {user.data.ok}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-no-wrap text-left">
+                    <div className="text-sm leading-5 text-gray-900">
+                      {user.data.cancel}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-no-wrap text-left">
+                    <div className="text-sm leading-5 text-gray-900">
+                      {user.data.ipAddress}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-no-wrap text-left">

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import FacebookLogin from "react-facebook-login";
 import {
   collection,
   query,
   orderBy,
   onSnapshot,
   doc,
+  where,
+  getDocs,
   updateDoc,
   addDoc,
   Timestamp,
@@ -17,35 +18,22 @@ import Event from "./components/Event";
 import User from "./components/User";
 import "./App.css";
 
-const FACEBOOK_ID = process.env.REACT_APP_FACEBOOK_ID;
-const FACEBOOK_ADMIN_ID = process.env.REACT_APP_FACEBOOK_ADMIN_ID;
-
 function App() {
-  const [fbLogin, setFBLogin] = useState(false);
-  const [fbData, setDataFB] = useState({});
   const [openAddModal, setOpenAddModal] = useState(false);
   const [events, setEvents] = useState([]);
   const [users, setUsers] = useState([]);
-  const responseFacebook = (response) => {
-    setDataFB(response);
-    if (response.accessToken) {
-      setFBLogin(true);
-    } else {
-      setFBLogin(false);
-    }
-  };
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [currentIp, setCurrentIp] = useState("");
 
   const handleOkClick = (cardData) => {
-    // Handle the OK button click event with card data
-    // console.log(cardData);
-    // updateData(cardData);
+    const newMember = cardData.members[cardData.members.length - 1];
     if (users.length === 0) {
-      createUser(fbData);
+      createUser(newMember);
     } else {
       let isNewUser = false;
 
       for (let i = 0; i < users.length; i++) {
-        if (users[i].data.fbId === fbData.id) {
+        if (users[i].data.ipAddress === currentIp) {
           break;
         }
 
@@ -53,23 +41,53 @@ function App() {
       }
 
       if (isNewUser) {
-        createUser();
+        createUser(newMember);
       }
     }
 
-    handleUpdate(cardData);
-    console.log("OK button clicked with card data:", cardData);
+    handleUpdateEvent(cardData);
+    handleUpdateUser(1, 0);
   };
 
   const handleCancelClick = (cardData) => {
-    handleUpdate(cardData);
+    handleUpdateEvent(cardData);
+    handleUpdateUser(0, 1);
   };
 
   const handleDoneClick = (cardData) => {
-    handleUpdate(cardData);
+    handleUpdateEvent(cardData);
   };
 
-  const handleUpdate = async (cardData) => {
+  const handleUpdateUser = async (ok, cancel) => {
+    const fieldNameToQuery = "ipAddress";
+
+    const q = query(
+      collection(db, "users"),
+      where(fieldNameToQuery, "==", currentIp)
+    );
+
+    getDocs(q)
+      .then((querySnapshot) => {
+        querySnapshot.forEach((_doc) => {
+          const data = _doc.data();
+          const docRef = doc(db, "users", _doc.id);
+          updateDoc(docRef, {
+            ok: data.ok + ok,
+            cancel: data.cancel + cancel,
+          })
+            .then(() => {
+              console.log("Document updated successfully.");
+            })
+            .catch((error) => {
+              console.error("Error updating document:", error);
+            });
+        });
+      })
+      .catch((error) => {
+        console.error("Error querying Firestore:", error);
+      });
+  };
+  const handleUpdateEvent = async (cardData) => {
     const eventDocRef = doc(db, "events", cardData.id);
     try {
       await updateDoc(eventDocRef, {
@@ -81,17 +99,17 @@ function App() {
     }
   };
 
-  const isAdmin = fbData.id === FACEBOOK_ADMIN_ID;
-  const createUser = async (fbData) => {
+  const createUser = async (newMember) => {
     try {
-      const newUser = await addDoc(collection(db, "users"), {
-        fbId: fbData.id,
-        name: fbData.name,
+      await addDoc(collection(db, "users"), {
+        ipAddress: currentIp,
+        name: newMember,
+        ok: 0,
+        cancel: 0,
         point: 0,
         active: true,
         created: Timestamp.now(),
       });
-      console.log(newUser);
     } catch (err) {
       alert(err);
     }
@@ -100,7 +118,7 @@ function App() {
   useEffect(() => {
     const eventColRef = query(
       collection(db, "events"),
-      orderBy("created", "desc")
+      orderBy("created", "asc")
     );
     onSnapshot(eventColRef, (snapshot) => {
       setEvents(
@@ -123,46 +141,32 @@ function App() {
         }))
       );
     });
+
+    fetch("https://api.db-ip.com/v2/free/self")
+      .then((response) => response.json())
+      .then((data) => {
+        setCurrentIp(data.ipAddress);
+        setIsAdmin(
+          data.ipAddress === process.env.REACT_APP_IPV4_ADDRESS ||
+            data.ipAddress === process.env.REACT_APP_IPV6_ADDRESS
+        );
+      });
   }, []);
 
   return (
     <div className="App">
       <div className="flex flex-col justify-center items-center">
-        {!fbLogin && (
-          <div className="my-5">
-            <FacebookLogin
-              appId={FACEBOOK_ID}
-              autoLoad={true}
-              fields="name,email,picture"
-              scope="public_profile,user_friends"
-              callback={responseFacebook}
-              icon="fa-facebook"
-            />
-          </div>
-        )}
-
-        {fbLogin && (
-          <div className="my-2">
-            <h1 className="text-3xl font-semibold text-center mt-2">
-              Hello, {fbData.name}
-            </h1>
-          </div>
-        )}
         {isAdmin && (
           <button
             onClick={() => setOpenAddModal(true)}
-            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md font-semibold transition duration-300 ease-in-out w-30"
+            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md font-semibold transition duration-300 ease-in-out w-30 mt-5"
           >
             Thêm sân +
           </button>
         )}
       </div>
       {openAddModal && (
-        <AddEvent
-          onClose={() => setOpenAddModal(false)}
-          open={openAddModal}
-          fbData={fbData}
-        />
+        <AddEvent onClose={() => setOpenAddModal(false)} open={openAddModal} />
       )}
       <div className="container mx-auto py-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -177,10 +181,10 @@ function App() {
                   amount={event.data.amount}
                   members={event.data.members}
                   completed={event.data.completed}
+                  note={event.data.note}
                   onOkClick={handleOkClick}
                   onCancelClick={handleCancelClick}
                   onDoneClick={handleDoneClick}
-                  fbData={fbData}
                   isAdmin={isAdmin}
                 />
               )

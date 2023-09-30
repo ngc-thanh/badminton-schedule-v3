@@ -3,12 +3,14 @@ import { useState } from "react";
 import { db } from "../firebase";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 
-function AddEvent({ onClose, open, fbData }) {
+function AddEvent({ onClose, open }) {
   const [title, setTitle] = useState("");
+  const [time, setTime] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [members, setMembers] = useState([]);
-  const [createdBy, setCreatedBy] = useState(fbData.name + '-' + fbData.id);
+  const [createdBy, setCreatedBy] = useState("Thanh");
+  const [note, setNote] = useState("");
 
   /* function to add new task to firestore */
   const handleSubmit = async (e) => {
@@ -16,11 +18,13 @@ function AddEvent({ onClose, open, fbData }) {
     try {
       await addDoc(collection(db, "events"), {
         title: title,
+        time: Timestamp.fromDate(time),
         description: description,
         amount: amount,
         members: members,
         createdBy: createdBy,
         completed: false,
+        note: note,
         created: Timestamp.now(),
       });
       onClose();
@@ -46,6 +50,23 @@ function AddEvent({ onClose, open, fbData }) {
             onChange={(e) => setTitle(e.target.value.toUpperCase())}
             value={title}
             placeholder="Enter title"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="time"
+            className="block text-gray-700 font-semibold text-left mb-1"
+          >
+            Time
+          </label>
+          <input
+            type="text"
+            id="time"
+            name="time"
+            onChange={(e) => setTime(e.target.value)}
+            value={time}
+            placeholder="Enter time"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
           />
         </div>
@@ -80,6 +101,22 @@ function AddEvent({ onClose, open, fbData }) {
             rows="4"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none "
           ></input>
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="note"
+            className="block text-gray-700 font-semibold text-left mb-1"
+          >
+            Ghi chú
+          </label>
+          <textarea
+            id="note"
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="Enter note"
+            value={note}
+            rows="4"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none "
+          ></textarea>
         </div>
         <button
           type="submit"
