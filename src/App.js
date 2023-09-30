@@ -45,7 +45,7 @@ function App() {
       let isNewUser = false;
 
       for (let i = 0; i < users.length; i++) {
-        if (users[i].includes(fbData.id)) {
+        if (users[i].data.fbId === fbData.id) {
           break;
         }
 
@@ -66,8 +66,6 @@ function App() {
   };
 
   const handleDoneClick = (cardData) => {
-    console.log("hadnle done app");
-    console.log(cardData);
     handleUpdate(cardData);
   };
 
@@ -178,6 +176,7 @@ function App() {
                   description={event.data.description}
                   amount={event.data.amount}
                   members={event.data.members}
+                  completed={event.data.completed}
                   onOkClick={handleOkClick}
                   onCancelClick={handleCancelClick}
                   onDoneClick={handleDoneClick}
