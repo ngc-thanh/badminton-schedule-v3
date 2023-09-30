@@ -18,10 +18,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "rm": "rm -rf docs",
-    "mv": "mv build docs",
+    "rm": "rm -rf docs && rm -rf .env",
+    "mv": "mv build docs && cp .env.prod .env",
     "git": "git add . && git commit -m 'deploy' && git push origin master",
-    "deploy": "npm run rm && npm run build && npm run mv && npm run git"
+    "deploy": "npm run rm && npm run build && npm run mv && npm run git && rm -rf .env && cp .env.test .env"
   },
   "eslintConfig": {
     "extends": [
