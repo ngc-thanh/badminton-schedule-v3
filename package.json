@@ -18,8 +18,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "rm": "rm -rf docs && rm -rf .env",
-    "mv": "mv build docs && cp .env.prod .env",
+    "rm": "rm -rf docs && rm -rf .env && cp .env.prod .env",
+    "mv": "mv build docs",
     "git": "git add . && git commit -m 'deploy' && git push origin master",
     "deploy": "npm run rm && npm run build && npm run mv && npm run git && rm -rf .env && cp .env.test .env"
   },
