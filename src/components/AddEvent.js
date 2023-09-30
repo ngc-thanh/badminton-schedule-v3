@@ -8,6 +8,8 @@ function AddEvent({ onClose, open }) {
   const [time, setTime] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
+  const [participant, setParticipant] = useState("");
+  const [deadline, setDeadline] = useState("");
   const [members, _setMembers] = useState([]);
   const [createdBy, _setCreatedBy] = useState("Thanh");
   const [note, setNote] = useState("");
@@ -25,11 +27,13 @@ function AddEvent({ onClose, open }) {
         createdBy: createdBy,
         completed: false,
         note: note,
+        participant: participant,
+        deadline: deadline,
         created: Timestamp.now(),
       });
       onClose();
     } catch (err) {
-      alert('Create event failed: ' + err);
+      alert("Create event failed: " + err);
     }
   };
 
@@ -41,7 +45,7 @@ function AddEvent({ onClose, open }) {
             htmlFor="title"
             className="block text-gray-700 font-semibold text-left mb-1"
           >
-            Title
+            Tiêu đề
           </label>
           <input
             type="text"
@@ -58,7 +62,7 @@ function AddEvent({ onClose, open }) {
             htmlFor="time"
             className="block text-gray-700 font-semibold text-left mb-1"
           >
-            Time
+            Thời gian
           </label>
           <input
             type="text"
@@ -75,10 +79,11 @@ function AddEvent({ onClose, open }) {
             htmlFor="description"
             className="block text-gray-700 font-semibold text-left mb-1"
           >
-            Description
+            Địa chỉ
           </label>
           <input
             id="description"
+            type="text"
             onChange={(e) => setDescription(e.target.value)}
             placeholder="戸田スポーツセンター"
             value={description}
@@ -88,16 +93,51 @@ function AddEvent({ onClose, open }) {
         </div>
         <div className="mb-4">
           <label
+            htmlFor="deadline"
+            className="block text-gray-700 font-semibold text-left mb-1"
+          >
+            Hạn hủy sân
+          </label>
+          <input
+            type="text"
+            id="deadline"
+            name="deadline"
+            onChange={(e) => setDeadline(e.target.value)}
+            value={deadline}
+            placeholder="2023/09/30"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
+          />
+        </div>
+        <div className="mb-4">
+          <label
             htmlFor="amount"
             className="block text-gray-700 font-semibold text-left mb-1"
           >
-            Amount
+            Số sân
           </label>
           <input
             id="amount"
+            type="number"
             onChange={(e) => setAmount(e.target.value)}
             placeholder="2"
             value={amount}
+            rows="4"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none "
+          ></input>
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="participant"
+            className="block text-gray-700 font-semibold text-left mb-1"
+          >
+            Giới hạn số người
+          </label>
+          <input
+            id="participant"
+            type="number"
+            onChange={(e) => setParticipant(e.target.value)}
+            placeholder="2"
+            value={participant}
             rows="4"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none "
           ></input>
@@ -111,6 +151,7 @@ function AddEvent({ onClose, open }) {
           </label>
           <textarea
             id="note"
+            type="text"
             onChange={(e) => setNote(e.target.value)}
             placeholder="Anh em nhớ đăng ký sớm"
             value={note}

@@ -49,13 +49,25 @@ function App() {
     }
 
     handleUpdateEvent(cardData);
-    handleUpdateUser(1, 0);
+    handleUpdateUser(1, 0, isWithin4Days(cardData.time) ? 0 : 1);
     createBookingDetail(true, cardData.title, cardData.id);
+  };
+
+  const isWithin4Days = (timestampField) => {
+    if (!timestampField) {
+      return false;
+    }
+
+    const currentTime = new Date();
+    const fourDaysAgo = new Date();
+    fourDaysAgo.setDate(fourDaysAgo.getDate() - 4);
+
+    return currentTime < timestampField && timestampField > fourDaysAgo;
   };
 
   const handleCancelClick = (cardData) => {
     handleUpdateEvent(cardData);
-    handleUpdateUser(0, 1);
+    handleUpdateUser(1, 0, isWithin4Days(cardData.time) ? 0 : 1);
     createBookingDetail(false, cardData.title, cardData.id);
   };
 
@@ -71,7 +83,7 @@ function App() {
     }
   };
 
-  const handleUpdateUser = async (ok, cancel) => {
+  const handleUpdateUser = async (ok, cancel, delay) => {
     const fieldNameToQuery = "ipAddress";
 
     const q = query(
@@ -87,6 +99,7 @@ function App() {
           updateDoc(docRef, {
             ok: data.ok + ok,
             cancel: data.cancel + cancel,
+            delay: data.delay + delay,
           })
             .then(() => {
               console.log("Document updated successfully.");
@@ -133,6 +146,7 @@ function App() {
         name: newMember,
         ok: 0,
         cancel: 0,
+        delay: 0,
         point: 0,
         active: true,
         created: Timestamp.now(),

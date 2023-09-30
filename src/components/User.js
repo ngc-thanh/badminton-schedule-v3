@@ -19,6 +19,9 @@ const User = ({ users }) => {
               CANCEL
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              DELAY
+            </th>
+            <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
               IP Address
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -51,6 +54,11 @@ const User = ({ users }) => {
                   <td className="px-6 py-4 whitespace-no-wrap text-left">
                     <div className="text-sm leading-5 text-gray-900">
                       {user.data.cancel}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-no-wrap text-left">
+                    <div className="text-sm leading-5 text-gray-900">
+                      {user.data.delay}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-no-wrap text-left">

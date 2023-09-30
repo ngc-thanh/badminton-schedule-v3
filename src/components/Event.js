@@ -104,7 +104,7 @@ const Event = ({
           <ul className="list-disc list-inside list-none">
             {members &&
               members.map((member, index) => (
-                <div key={index} className="flex justify-between">
+                <div key={index} className="flex justify-between mb-1">
                   <li className="text-left">
                     {index + 1}. {member}
                   </li>
@@ -112,7 +112,7 @@ const Event = ({
                     className="pr-5 font-semibold text-lg text-red-500"
                     onClick={() => handleDeleteClick(index)}
                   >
-                    X
+                    ❌
                   </button>
                 </div>
               ))}
@@ -122,7 +122,7 @@ const Event = ({
       <div className="mt-auto">
         <input
           id="name"
-          placeholder="Enter your name"
+          placeholder="Nhập tên của bạn..."
           onChange={(e) => setName(e.target.value)}
           rows="4"
           value={name}

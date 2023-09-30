@@ -33,18 +33,18 @@ function UnlockModal({ open, modalLabel, onClose, onUnlock }) {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="mb-4">
               <label
-                htmlFor="time"
+                htmlFor="password"
                 className="block text-gray-700 font-semibold text-left mb-1"
               >
                 MẬT KHẨU
               </label>
               <input
-                type="text"
-                id="time"
-                name="time"
+                type="password"
+                id="password"
+                name="password"
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
-                placeholder="2023/09/30"
+                placeholder="1234567890"
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
               />
             </div>
