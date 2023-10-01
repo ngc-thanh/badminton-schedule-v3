@@ -78,6 +78,9 @@ function AddEvent({ onClose, open }) {
     setMembers(selectedMembers);
   }
 
+  // Define an array of options
+  const options = ['戸田スポーツセンター', '西スポーツセンター'];
+
   useEffect(() => {
     getSelectedMembers();
   }, [userCheckboxes]);
@@ -130,23 +133,21 @@ function AddEvent({ onClose, open }) {
           >
             Địa chỉ
           </label>
-          <input
+          <select
             id="description"
-            type="text"
             required
-            onChange={(e) => {
-              setDescription(e.target.value);
-              const parsedDate = new Date(time);
-              parsedDate.setDate(parsedDate.getDate() - 4);
-              const formattedDate = parsedDate.toISOString().split('T')[0];
-              setDeadline(formattedDate);
-              setNote("Anh em nhớ đăng ký sớm trước " + formattedDate.replace(/-/g, '/') + " nha");
-            }}
-            placeholder="戸田スポーツセンター"
+            onChange={(e) =>
+              setDescription(e.target.value)
+            }
             value={description}
-            rows="4"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
-          ></input>
+          >
+            {options.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="mb-4">
@@ -160,10 +161,16 @@ function AddEvent({ onClose, open }) {
               id="amount"
               required
               type="number"
-              onChange={(e) =>
-                setAmount(e.target.value)
+              onChange={(e) => {
+                setAmount(e.target.value);
+                const parsedDate = new Date(time);
+                parsedDate.setDate(parsedDate.getDate() - 4);
+                const formattedDate = parsedDate.toISOString().split('T')[0];
+                setDeadline(formattedDate);
+                setNote("Anh em nhớ đăng ký sớm trước " + formattedDate.replace(/-/g, '/') + " nha");
               }
-              placeholder="2"
+              }
+              placeholder="3"
               value={amount}
               rows="4"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none "
@@ -183,7 +190,7 @@ function AddEvent({ onClose, open }) {
               onChange={(e) =>
                 setParticipant(e.target.value)
               }
-              placeholder="2"
+              placeholder="16"
               value={participant}
               rows="4"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none "
