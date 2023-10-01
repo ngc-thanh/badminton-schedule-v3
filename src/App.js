@@ -207,8 +207,7 @@ function App() {
       .then((data) => {
         setCurrentIp(data.ipAddress);
         setIsAdmin(
-          data.ipAddress === process.env.REACT_APP_IPV4_ADDRESS ||
-            data.ipAddress === process.env.REACT_APP_IPV6_ADDRESS
+          data.ipAddress === process.env.REACT_APP_IPV4_ADDRESS
         );
       });
 
