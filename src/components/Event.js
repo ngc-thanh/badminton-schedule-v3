@@ -89,7 +89,7 @@ const Event = ({
         </div>
         <div className="mb-4">
           <p className="text-lg font-semibold text-left">
-            {amount} sân (full {amount * 4 + 4} người)
+            {amount} sân (full {participant} người)
           </p>
         </div>
         <div className="mb-4">
