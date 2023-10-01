@@ -66,7 +66,7 @@ function AddEvent({ onClose, open }) {
             Thời gian
           </label>
           <input
-            type="text"
+            type="date"
             id="time"
             name="time"
             required
@@ -91,13 +91,11 @@ function AddEvent({ onClose, open }) {
             required
             onChange={(e) => {
               setDescription(e.target.value);
-              const timeDate = new Date(time);
-              timeDate.setDate(timeDate.getDate() - 4);
-              const formattedDeadline = `${timeDate.getFullYear()}/${(timeDate.getMonth() + 1)
-                .toString()
-                .padStart(2, '0')}/${timeDate.getDate().toString().padStart(2, '0')}`;
-              setDeadline(formattedDeadline);
-              setNote("Anh em nhớ đăng ký sớm trước " + time);
+              const parsedDate = new Date(time);
+              parsedDate.setDate(parsedDate.getDate() - 4);
+              const formattedDate = parsedDate.toISOString().split('T')[0];
+              setDeadline(formattedDate);
+              setNote("Anh em nhớ đăng ký sớm trước " + formattedDate.replace(/-/g, '/') + " nha");
             }}
             placeholder="戸田スポーツセンター"
             value={description}
@@ -153,7 +151,7 @@ function AddEvent({ onClose, open }) {
             Hạn hủy sân
           </label>
           <input
-            type="text"
+            type="date"
             id="deadline"
             required
             name="deadline"

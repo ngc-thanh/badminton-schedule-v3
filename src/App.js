@@ -265,6 +265,8 @@ function App() {
                   members={event.data.members}
                   completed={event.data.completed}
                   note={event.data.note}
+                  deadline={event.data.deadline}
+                  participant={event.data.participant}
                   onOkClick={handleOkClick}
                   onCancelClick={handleCancelClick}
                   onDoneClick={handleDoneClick}

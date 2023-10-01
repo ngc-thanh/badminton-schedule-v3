@@ -9,6 +9,8 @@ const Event = ({
   members,
   completed,
   note,
+  deadline,
+  participant,
   onOkClick,
   onCancelClick,
   onDoneClick,
@@ -20,7 +22,7 @@ const Event = ({
     setName("");
   };
 
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [isOver, setIsOver] = useState(false);
 
   const handleInputKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -43,6 +45,11 @@ const Event = ({
   const handleDoneClick = () => {
     completed = true;
     onDoneClick({ id, title, description, amount, members, completed });
+  };
+
+  const handleEditClick = () => {
+    // completed = true;
+    // onDoneClick({ id, title, description, amount, members, completed });
   };
 
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -70,7 +77,7 @@ const Event = ({
   };
 
   useEffect(() => {
-    setIsDisabled(members.length >= amount * 4 + 4);
+    setIsOver(members.length >= amount * 4 + 4);
   }, [members]);
 
   return (
@@ -92,6 +99,12 @@ const Event = ({
         {isAdmin && (
           <div className="mb-4 text-left">
             <button
+              className="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-600 mr-2"
+              onClick={handleEditClick}
+            >
+              SỬA
+            </button>
+            <button
               className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
               onClick={handleDoneClick}
             >
@@ -106,7 +119,7 @@ const Event = ({
               members.map((member, index) => (
                 <div key={index} className="flex justify-between mb-1">
                   <li className="text-left">
-                    {index + 1}. {member}
+                    {index + 1}. {member} {isOver && index + 1 > participant ? ' (dự bị)' : ''}
                   </li>
                   <button
                     className="pr-5 font-semibold text-lg text-red-500"
@@ -131,14 +144,14 @@ const Event = ({
         ></input>
         <button
           className={`text-white px-4 py-2 rounded-md mr-2 ${
-            isDisabled
-              ? "opacity-50 cursor-not-allowed bg-gray-500"
-              : "bg-green-500 hover:bg-green-600"
+            name
+              ? "bg-green-500 hover:bg-green-600"
+              : "opacity-50 cursor-not-allowed bg-gray-500"
           }`}
           onClick={handleOkClick}
-          disabled={isDisabled}
+          disabled={name ? false : true}
         >
-          {isDisabled ? "FULL" : "THAM GIA"}
+          {name ? 'THAM GIA' : 'HÃY NHẬP TÊN'}
         </button>
       </div>
       <ConfirmDeleteModal
