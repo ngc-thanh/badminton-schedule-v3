@@ -11,6 +11,7 @@ function UnlockModal({ open, modalLabel, onClose, onUnlock }) {
   };
 
   const handleSubmit = (e) => {
+    e.preventDefault();
     onUnlock(password);
   };
 
