@@ -135,6 +135,7 @@ const Event = ({
       <div className="mt-auto">
         <input
           id="name"
+          required
           placeholder="Nhập tên của bạn..."
           onChange={(e) => setName(e.target.value)}
           rows="4"
