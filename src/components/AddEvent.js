@@ -38,8 +38,8 @@ function AddEvent({ onClose, open }) {
   };
 
   return (
-    <AddEventModal modalLabel="Add Event" onClose={onClose} open={open}>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <AddEventModal modalLabel="Add Event" onClose={onClose} open={open} >
+      <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label
             htmlFor="title"
@@ -53,7 +53,8 @@ function AddEvent({ onClose, open }) {
             name="title"
             onChange={(e) => setTitle(e.target.value.toUpperCase())}
             value={title}
-            placeholder="THỨ 7, 30/9, 19-21H"
+            required
+            placeholder="THỨ 7, 2023/09/30, 19-21H"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
           />
         </div>
@@ -68,7 +69,10 @@ function AddEvent({ onClose, open }) {
             type="text"
             id="time"
             name="time"
-            onChange={(e) => setTime(e.target.value)}
+            required
+            onChange={(e) =>
+              setTime(e.target.value)
+            }
             value={time}
             placeholder="2023/09/30"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
@@ -84,29 +88,22 @@ function AddEvent({ onClose, open }) {
           <input
             id="description"
             type="text"
-            onChange={(e) => setDescription(e.target.value)}
+            required
+            onChange={(e) => {
+              setDescription(e.target.value);
+              const timeDate = new Date(time);
+              timeDate.setDate(timeDate.getDate() - 4);
+              const formattedDeadline = `${timeDate.getFullYear()}/${(timeDate.getMonth() + 1)
+                .toString()
+                .padStart(2, '0')}/${timeDate.getDate().toString().padStart(2, '0')}`;
+              setDeadline(formattedDeadline);
+              setNote("Anh em nhớ đăng ký sớm trước " + time);
+            }}
             placeholder="戸田スポーツセンター"
             value={description}
             rows="4"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
           ></input>
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="deadline"
-            className="block text-gray-700 font-semibold text-left mb-1"
-          >
-            Hạn hủy sân
-          </label>
-          <input
-            type="text"
-            id="deadline"
-            name="deadline"
-            onChange={(e) => setDeadline(e.target.value)}
-            value={deadline}
-            placeholder="2023/09/30"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
-          />
         </div>
         <div className="mb-4">
           <label
@@ -117,8 +114,11 @@ function AddEvent({ onClose, open }) {
           </label>
           <input
             id="amount"
+            required
             type="number"
-            onChange={(e) => setAmount(e.target.value)}
+            onChange={(e) =>
+              setAmount(e.target.value)
+            }
             placeholder="2"
             value={amount}
             rows="4"
@@ -134,8 +134,11 @@ function AddEvent({ onClose, open }) {
           </label>
           <input
             id="participant"
+            required
             type="number"
-            onChange={(e) => setParticipant(e.target.value)}
+            onChange={(e) =>
+              setParticipant(e.target.value)
+            }
             placeholder="2"
             value={participant}
             rows="4"
@@ -144,20 +147,39 @@ function AddEvent({ onClose, open }) {
         </div>
         <div className="mb-4">
           <label
+            htmlFor="deadline"
+            className="block text-gray-700 font-semibold text-left mb-1"
+          >
+            Hạn hủy sân
+          </label>
+          <input
+            type="text"
+            id="deadline"
+            required
+            name="deadline"
+            onChange={(e) => setDeadline(e.target.value)}
+            value={deadline}
+            placeholder="2023/09/30"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
+          />
+        </div>
+        <div className="mb-4">
+          <label
             htmlFor="note"
             className="block text-gray-700 font-semibold text-left mb-1"
           >
             Ghi chú
           </label>
-          <textarea
+          <input
             id="note"
             type="text"
+            required
             onChange={(e) => setNote(e.target.value)}
-            placeholder="Anh em nhớ đăng ký sớm"
+            placeholder="Anh em nhớ đăng ký sớm trước 2023/09/30"
             value={note}
             rows="4"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none "
-          ></textarea>
+          ></input>
         </div>
         <button
           type="submit"
@@ -166,7 +188,7 @@ function AddEvent({ onClose, open }) {
           Done
         </button>
       </form>
-    </AddEventModal>
+    </AddEventModal >
   );
 }
 
