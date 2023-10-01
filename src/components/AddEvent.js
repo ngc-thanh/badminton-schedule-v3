@@ -88,7 +88,7 @@ function AddEvent({ onClose, open }) {
   return (
     <AddEventModal modalLabel="THÊM SÂN" onClose={onClose} open={open} >
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
+        <div className="mb-1">
           <label
             htmlFor="title"
             className="block text-gray-700 font-semibold text-left mb-1"
@@ -106,7 +106,7 @@ function AddEvent({ onClose, open }) {
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
           />
         </div>
-        <div className="mb-4">
+        <div className="mb-1">
           <label
             htmlFor="time"
             className="block text-gray-700 font-semibold text-left mb-1"
@@ -126,7 +126,7 @@ function AddEvent({ onClose, open }) {
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
           />
         </div>
-        <div className="mb-4">
+        <div className="mb-1">
           <label
             htmlFor="description"
             className="block text-gray-700 font-semibold text-left mb-1"
@@ -150,7 +150,7 @@ function AddEvent({ onClose, open }) {
           </select>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <div className="mb-4">
+          <div className="mb-1">
             <label
               htmlFor="amount"
               className="block text-gray-700 font-semibold text-left mb-1"
@@ -176,7 +176,7 @@ function AddEvent({ onClose, open }) {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none "
             ></input>
           </div>
-          <div className="mb-4">
+          <div className="mb-1">
             <label
               htmlFor="participant"
               className="block text-gray-700 font-semibold text-left mb-1"
@@ -197,7 +197,7 @@ function AddEvent({ onClose, open }) {
             ></input>
           </div>
         </div>
-        <div className="mb-4">
+        <div className="mb-1">
           <label
             htmlFor="deadline"
             className="block text-gray-700 font-semibold text-left mb-1"
@@ -215,7 +215,7 @@ function AddEvent({ onClose, open }) {
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
           />
         </div>
-        <div className="mb-4">
+        <div className="mb-1">
           <label
             htmlFor="note"
             className="block text-gray-700 font-semibold text-left mb-1"
@@ -230,11 +230,10 @@ function AddEvent({ onClose, open }) {
             placeholder="Anh em nhớ đăng ký sớm trước 2023/09/30"
             value={note}
             rows="4"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none "
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none h-16"
           ></textarea>
         </div>
-
-        <div className="mb-4">
+        <div className="mb-1">
           <label className="block text-gray-700 font-semibold text-left">Thành viên cố định:</label>
           <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
             {users.map((user) => (
@@ -252,8 +251,6 @@ function AddEvent({ onClose, open }) {
 
           </div>
         </div>
-
-
         <button
           type="submit"
           className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md font-semibold transition duration-300 ease-in-out"
