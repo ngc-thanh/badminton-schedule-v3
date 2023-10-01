@@ -79,7 +79,7 @@ function AddEvent({ onClose, open }) {
   }
 
   // Define an array of options
-  const options = ['戸田スポーツセンター', '西スポーツセンター'];
+  const options = ['戸田スポーツセンター', '西スポーツセンター', '体育武道センター'];
 
   useEffect(() => {
     getSelectedMembers();
