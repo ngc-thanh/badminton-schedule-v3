@@ -195,7 +195,7 @@ function App() {
 
     const userColRef = query(
       collection(db, "users"),
-      orderBy("created", "desc")
+      orderBy("ipAddress", "asc"),
     );
     onSnapshot(userColRef, (snapshot) => {
       setUsers(
