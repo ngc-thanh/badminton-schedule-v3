@@ -18,7 +18,7 @@ const Event = ({
 }) => {
   const handleOkClick = () => {
     members.push(name);
-    onOkClick({ id, title, description, amount, members, completed });
+    onOkClick({ id, title, description, amount, members, completed, name });
     setName("");
   };
 
@@ -38,8 +38,10 @@ const Event = ({
     const updatedMembers = members.filter(
       (_, index) => index !== indexToRemove
     );
+
+    const removeName = members[indexToRemove];
     members = updatedMembers;
-    onCancelClick({ id, title, description, amount, members, completed });
+    onCancelClick({ id, title, description, amount, members, completed, removeName});
   };
 
   const handleDoneClick = () => {

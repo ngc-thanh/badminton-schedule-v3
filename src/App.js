@@ -29,23 +29,17 @@ function App() {
   const [isNewUser, setIsNewUser] = useState(false);
 
   const handleOkClick = (cardData) => {
-    const newMember = cardData.members[cardData.members.length - 1];
-    if (isNewUser) {
-      createUser(newMember);
-      setIsNewUser(false);
-    } else {
-      for (let i = 0; i < users.length; i++) {
-        if (users[i].data.ipAddress === currentIp) {
-          break;
-        } else {
-          setIsNewUser(true);
-        }
-      }
+    checkRecordExists("users", "ipAddress", localStorage.getItem("NS_KWGC"))
+      .then((exists) => {
+        setIsNewUser(exists);
+      })
+      .catch((error) => {
+        console.error("checkRecordExists Error:", error);
+      });
 
-      if (isNewUser) {
-        createUser(newMember);
-        setIsNewUser(false);
-      }
+    if (!isNewUser) {
+      createUser(cardData.name);
+      setIsNewUser(false);
     }
 
     handleUpdateEvent(cardData);
@@ -66,8 +60,20 @@ function App() {
   };
 
   const handleCancelClick = (cardData) => {
+    checkRecordExists("users", "ipAddress", localStorage.getItem("NS_KWGC"))
+      .then((exists) => {
+        setIsNewUser(exists);
+      })
+      .catch((error) => {
+        console.error("checkRecordExists Error:", error);
+      });
+    if (!isNewUser) {
+      createUser(cardData.removeName);
+      setIsNewUser(false);
+    }
+
     handleUpdateEvent(cardData);
-    handleUpdateUser(1, 0, isWithin4Days(cardData.time) ? 0 : 1);
+    handleUpdateUser(0, 1, isWithin4Days(cardData.time) ? 0 : 1);
     createBookingDetail(false, cardData.title, cardData.id);
   };
 
@@ -121,7 +127,7 @@ function App() {
         members: cardData.members,
       });
     } catch (err) {
-      alert('handleUpdateEvent error: ' + err);
+      alert("handleUpdateEvent error: " + err);
     }
   };
 
@@ -135,7 +141,7 @@ function App() {
         created: Timestamp.now(),
       });
     } catch (err) {
-      alert('createBookingDetail error: ' + err);
+      alert("createBookingDetail error: " + err);
     }
   };
 
@@ -152,7 +158,7 @@ function App() {
         created: Timestamp.now(),
       });
     } catch (err) {
-      alert('createUser error: ' + err);
+      alert("createUser error: " + err);
     }
   };
 
@@ -176,10 +182,8 @@ function App() {
   };
 
   useEffect(() => {
-    const eventColRef = query(
-      collection(db, "events"),
-      orderBy("time", "asc")
-    );
+    const localStorageIpAddress = localStorage.getItem("NS_KWGC");
+    const eventColRef = query(collection(db, "events"), orderBy("time", "asc"));
     onSnapshot(eventColRef, (snapshot) => {
       setEvents(
         snapshot.docs.map((doc) => ({
@@ -202,22 +206,18 @@ function App() {
       );
     });
 
-    fetch("https://api.db-ip.com/v2/free/self")
-      .then((response) => response.json())
-      .then((data) => {
-        setCurrentIp(data.ipAddress);
-        setIsAdmin(
-          data.ipAddress === process.env.REACT_APP_IPV4_ADDRESS
-        );
-      });
-
-    checkRecordExists("users", "ipAddress", currentIp)
-      .then((exists) => {
-        setIsNewUser(exists);
-      })
-      .catch((error) => {
-        console.error("checkRecordExists Error:", error);
-      });
+    if (localStorageIpAddress) {
+      setCurrentIp(localStorageIpAddress);
+      setIsAdmin(localStorageIpAddress === process.env.REACT_APP_IPV4_ADDRESS);
+    } else {
+      fetch("https://api.db-ip.com/v2/free/self")
+        .then((response) => response.json())
+        .then((data) => {
+          localStorage.setItem("NS_KWGC", data.ipAddress);
+          setCurrentIp(data.ipAddress);
+          setIsAdmin(data.ipAddress === process.env.REACT_APP_IPV4_ADDRESS);
+        });
+    }
   }, []);
 
   return (
