@@ -106,6 +106,7 @@ function App() {
             ok: data.ok + ok,
             cancel: data.cancel + cancel,
             delay: data.delay + delay,
+            updated: Timestamp.now(),
           })
             .then(() => {
               console.log("Document updated successfully.");
@@ -125,6 +126,7 @@ function App() {
       await updateDoc(eventDocRef, {
         completed: cardData.completed,
         members: cardData.members,
+        updated: Timestamp.now(),
       });
     } catch (err) {
       alert("handleUpdateEvent error: " + err);
@@ -139,6 +141,7 @@ function App() {
         ipAddress: currentIp,
         eventId: eventId,
         created: Timestamp.now(),
+        updated: Timestamp.now(),
       });
     } catch (err) {
       alert("createBookingDetail error: " + err);
@@ -156,6 +159,7 @@ function App() {
         point: 0,
         active: true,
         created: Timestamp.now(),
+        updated: Timestamp.now(),
       });
     } catch (err) {
       alert("createUser error: " + err);
@@ -181,7 +185,39 @@ function App() {
       });
   };
 
+  // const addNewFieldToExistDocument = (updateCollection) => {
+  //   const collectionName = updateCollection;
+
+  //   // Define the new field and its value
+  //   const newField = "updated";
+  //   const newValue = Timestamp.now();
+
+  //   // Reference the collection
+  //   const collectionRef = collection(db, collectionName);
+
+  //   // Use a query to fetch all documents in the collection
+  //   const q = query(collectionRef);
+
+  //   getDocs(q)
+  //     .then((querySnapshot) => {
+  //       querySnapshot.forEach((_doc) => {
+  //         // Use the update method to add the new field to each document
+  //         const docRef = doc(db, collectionName, _doc.id);
+  //         updateDoc(docRef, {
+  //           [newField]: newValue,
+  //         });
+  //       });
+  //     })
+  //     .then(() => {
+  //       console.log("Added the new field to all documents in the collection.");
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error adding the new field: ", error);
+  //     });
+  // };
+
   useEffect(() => {
+    // addNewFieldToExistDocument('booking_details');
     const localStorageIpAddress = localStorage.getItem("NS_KWGC");
     const eventColRef = query(collection(db, "events"), orderBy("time", "asc"));
     onSnapshot(eventColRef, (snapshot) => {
@@ -195,7 +231,7 @@ function App() {
 
     const userColRef = query(
       collection(db, "users"),
-      orderBy("ipAddress", "asc"),
+      orderBy("ipAddress", "asc")
     );
     onSnapshot(userColRef, (snapshot) => {
       setUsers(

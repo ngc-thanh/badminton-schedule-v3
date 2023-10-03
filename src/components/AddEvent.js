@@ -59,6 +59,7 @@ function AddEvent({ onClose, open }) {
         participant: participant,
         deadline: deadline,
         created: Timestamp.now(),
+        updated: Timestamp.now(),
       });
       onClose();
     } catch (err) {

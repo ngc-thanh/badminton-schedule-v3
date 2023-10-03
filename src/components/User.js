@@ -25,6 +25,9 @@ const User = ({ users }) => {
               IP Address
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              Updated At
+            </th>
+            <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
               Created At
             </th>
           </tr>
@@ -32,7 +35,19 @@ const User = ({ users }) => {
         <tbody className="bg-white divide-y divide-gray-200">
           {users &&
             users.map((user) => {
-              const createdAt = new Date(user.data.created.toDate());
+              const updatedDatetime = new Date(user.data.updated.toDate());
+              const createdDatetime = new Date(user.data.created.toDate());
+              const options = {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                hour12: false, // Use 24-hour format
+              };
+              const updatedAt = updatedDatetime.toLocaleString(undefined, options);
+              const createdAt = createdDatetime.toLocaleString(undefined, options);
 
               return (
                 <tr key={user.id}>
@@ -68,7 +83,12 @@ const User = ({ users }) => {
                   </td>
                   <td className="px-6 py-4 whitespace-no-wrap text-left">
                     <div className="text-sm leading-5 text-gray-900">
-                      {createdAt.toDateString()}
+                      {updatedAt}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-no-wrap text-left">
+                    <div className="text-sm leading-5 text-gray-900">
+                      {createdAt}
                     </div>
                   </td>
                 </tr>
