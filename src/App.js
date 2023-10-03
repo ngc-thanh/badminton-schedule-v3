@@ -11,7 +11,7 @@ import {
   addDoc,
   Timestamp,
 } from "firebase/firestore";
-import { db } from "./firebase";
+import { db, analytics } from "./firebase";
 
 import AddEvent from "./components/AddEvent";
 import Event from "./components/Event";
