@@ -15,6 +15,7 @@ import { db, analytics } from "./firebase";
 
 import AddEvent from "./components/AddEvent";
 import Event from "./components/Event";
+import EventTable from "./components/EventTable";
 import User from "./components/User";
 import UnlockModal from "./components/UnlockModal";
 import "./App.css";
@@ -185,39 +186,35 @@ function App() {
       });
   };
 
-  // const addNewFieldToExistDocument = (updateCollection) => {
-  //   const collectionName = updateCollection;
+  const addNewFieldToExistDocument = (updateCollection, newField, newValue) => {
+    const collectionName = updateCollection;
 
-  //   // Define the new field and its value
-  //   const newField = "updated";
-  //   const newValue = Timestamp.now();
+    // Reference the collection
+    const collectionRef = collection(db, collectionName);
 
-  //   // Reference the collection
-  //   const collectionRef = collection(db, collectionName);
+    // Use a query to fetch all documents in the collection
+    const q = query(collectionRef);
 
-  //   // Use a query to fetch all documents in the collection
-  //   const q = query(collectionRef);
-
-  //   getDocs(q)
-  //     .then((querySnapshot) => {
-  //       querySnapshot.forEach((_doc) => {
-  //         // Use the update method to add the new field to each document
-  //         const docRef = doc(db, collectionName, _doc.id);
-  //         updateDoc(docRef, {
-  //           [newField]: newValue,
-  //         });
-  //       });
-  //     })
-  //     .then(() => {
-  //       console.log("Added the new field to all documents in the collection.");
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error adding the new field: ", error);
-  //     });
-  // };
+    getDocs(q)
+      .then((querySnapshot) => {
+        querySnapshot.forEach((_doc) => {
+          // Use the update method to add the new field to each document
+          const docRef = doc(db, collectionName, _doc.id);
+          updateDoc(docRef, {
+            [newField]: newValue,
+          });
+        });
+      })
+      .then(() => {
+        console.log("Added the new field to all documents in the collection.");
+      })
+      .catch((error) => {
+        console.error("Error adding the new field: ", error);
+      });
+  };
 
   useEffect(() => {
-    // addNewFieldToExistDocument('booking_details');
+    // addNewFieldToExistDocument('events', 'account', Timestamp.now());
     const localStorageIpAddress = localStorage.getItem("NS_KWGC");
     const eventColRef = query(collection(db, "events"), orderBy("time", "asc"));
     onSnapshot(eventColRef, (snapshot) => {
@@ -310,6 +307,11 @@ function App() {
               )
           )}
         </div>
+        {isAdmin && (
+          <div className="mt-10">
+            <EventTable events={events} />
+          </div>
+        )}
         {isAdmin && (
           <div className="mt-10">
             <User users={users} />
