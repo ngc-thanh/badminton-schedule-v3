@@ -115,7 +115,7 @@ const Event = ({
           </div>
         )}
         <div>
-          <h3 className="text-lg font-semibold text-left">Đăng ký tham gia:</h3>
+          <h3 className="text-lg font-semibold text-left">Đăng ký tham gia: { members.length }/{participant} người</h3>
           <ul className="list-disc list-inside list-none">
             {members &&
               members.map((member, index) => (
