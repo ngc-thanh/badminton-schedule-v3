@@ -78,7 +78,7 @@ const EventTable = ({ events }) => {
                   </td>
                   <td className="px-6 py-4 whitespace-no-wrap text-left">
                     <div className="text-sm leading-5 text-gray-900">
-                      { deadlineAt.toString().split(',')[0] }
+                      { deadlineAt.toString().split(',')[0].split(' ')[0] }
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-no-wrap text-left">
