@@ -340,11 +340,11 @@ function App() {
             <EventTable events={events} />
           </div>
         )}
-        {isAdmin && (
+        {/* {isAdmin && (
           <div className="mt-10">
             <User users={users} />
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
