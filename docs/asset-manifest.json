@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/badminton-schedule-v2/static/css/main.613e221c.css",
-    "main.js": "/badminton-schedule-v2/static/js/main.e1b8ca61.js",
+    "main.css": "/badminton-schedule-v2/static/css/main.16813a76.css",
+    "main.js": "/badminton-schedule-v2/static/js/main.c2e01e25.js",
     "static/js/787.25babcdb.chunk.js": "/badminton-schedule-v2/static/js/787.25babcdb.chunk.js",
     "index.html": "/badminton-schedule-v2/index.html",
-    "main.613e221c.css.map": "/badminton-schedule-v2/static/css/main.613e221c.css.map",
-    "main.e1b8ca61.js.map": "/badminton-schedule-v2/static/js/main.e1b8ca61.js.map",
+    "main.16813a76.css.map": "/badminton-schedule-v2/static/css/main.16813a76.css.map",
+    "main.c2e01e25.js.map": "/badminton-schedule-v2/static/js/main.c2e01e25.js.map",
     "787.25babcdb.chunk.js.map": "/badminton-schedule-v2/static/js/787.25babcdb.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.613e221c.css",
-    "static/js/main.e1b8ca61.js"
+    "static/css/main.16813a76.css",
+    "static/js/main.c2e01e25.js"
   ]
 }
