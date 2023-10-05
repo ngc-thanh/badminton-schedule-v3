@@ -3,7 +3,7 @@ import React from "react";
 const User = ({ users }) => {
   return (
     <div className="overflow-x-auto">
-      <h1 class="text-left mb-2 font-bold">USERS ({ users.length })</h1>
+      <h1 className="text-left mb-2 font-bold">USERS ({ users.length })</h1>
       <table className="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>

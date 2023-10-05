@@ -213,8 +213,36 @@ function App() {
       });
   };
 
+  const updateData = async (_collection) => {
+    try {
+      const collectionRef = collection(db, _collection); // Replace with your collection name
+      const querySnapshot = await getDocs(collectionRef);
+
+      const batch = [];
+      querySnapshot.forEach((_doc) => {
+        const oldValue = _doc.data().time;
+        const newValue = oldValue;
+        // const oldValue = _doc.data().time.toDate(); // Replace with your field name
+        // const parsedDate = new Date(oldValue);
+        // parsedDate.setDate(parsedDate.getDate() - 4);
+        // const newValue = parsedDate;
+
+        const docRef = doc(db, _collection, _doc.id); // Replace with your collection name
+        batch.push(updateDoc(docRef, { deadline: newValue })); // Replace with your field name
+      });
+
+      await Promise.all(batch);
+
+      console.log('All documents updated successfully.');
+    } catch (error) {
+      console.log(`Error updating documents: ${error.message}`);
+    }
+  };
+
   useEffect(() => {
-    // addNewFieldToExistDocument('events', 'account', Timestamp.now());
+    // addNewFieldToExistDocument('events', 'reservedTime', '');
+    // updateData('events');
+
     const localStorageIpAddress = localStorage.getItem("NS_KWGC");
     const eventColRef = query(collection(db, "events"), orderBy("time", "asc"));
     onSnapshot(eventColRef, (snapshot) => {

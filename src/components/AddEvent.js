@@ -13,6 +13,9 @@ function AddEvent({ onClose, open }) {
   const [members, setMembers] = useState([]);
   const [createdBy, _setCreatedBy] = useState("Thanh");
   const [note, setNote] = useState("");
+  const [account, setAccount] = useState("");
+  const [reservedDate, setReservedDate] = useState("");
+  const [reservedTime, setReservedTime] = useState("");
 
   // Create state for user checkboxes
   const [userCheckboxes, setUserCheckboxes] = useState({
@@ -26,12 +29,12 @@ function AddEvent({ onClose, open }) {
 
   // Define an array of users
   const users = [
-    { id: 'member1', name: 'Thanh' },
-    { id: 'member2', name: 'Thế Anh' },
-    { id: 'member3', name: 'Văn Tiến' },
-    { id: 'member4', name: 'Hoàng Kool' },
-    { id: 'member5', name: 'Phú' },
-    { id: 'member6', name: 'Duy' },
+    { id: "member1", name: "Thanh" },
+    { id: "member2", name: "Thế Anh" },
+    { id: "member3", name: "Văn Tiến" },
+    { id: "member4", name: "Hoàng Kool" },
+    { id: "member5", name: "Phú" },
+    { id: "member6", name: "Duy" },
   ];
 
   // Function to handle checkbox changes
@@ -72,83 +75,106 @@ function AddEvent({ onClose, open }) {
       .filter((userId) => userCheckboxes[userId])
       .map((userId) => {
         const user = users.find((u) => u.id === userId);
-        return user ? user.name : '';
+        return user ? user.name : "";
       });
 
     // Update the members state with the selected members
     setMembers(selectedMembers);
-  }
+  };
 
   // Define an array of options
-  const options = ['戸田スポーツセンター', '西スポーツセンター', '体育武道センター'];
+  const options = [
+    "戸田スポーツセンター",
+    "西スポーツセンター",
+    "体育武道センター",
+  ];
+
+  // Define an array of options
+  const accounts = ["Thế Anh", "Dũng"];
 
   useEffect(() => {
     getSelectedMembers();
   }, [userCheckboxes]);
 
   return (
-    <AddEventModal modalLabel="THÊM SÂN" onClose={onClose} open={open} >
+    <AddEventModal modalLabel="THÊM SÂN" onClose={onClose} open={open}>
       <form onSubmit={handleSubmit}>
-        <div className="mb-1">
-          <label
-            htmlFor="title"
-            className="block text-gray-700 font-semibold text-left mb-1"
-          >
-            Tiêu đề
-          </label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            onChange={(e) => setTitle(e.target.value.toUpperCase())}
-            value={title}
-            required
-            placeholder="THỨ 7, 2023/09/30, 19-21H"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
-          />
-        </div>
-        <div className="mb-1">
-          <label
-            htmlFor="time"
-            className="block text-gray-700 font-semibold text-left mb-1"
-          >
-            Thời gian
-          </label>
-          <input
-            type="date"
-            id="time"
-            name="time"
-            required
-            onChange={(e) =>
-              setTime(e.target.value)
-            }
-            value={time}
-            placeholder="2023/09/30"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
-          />
-        </div>
-        <div className="mb-1">
-          <label
-            htmlFor="description"
-            className="block text-gray-700 font-semibold text-left mb-1"
-          >
-            Địa chỉ
-          </label>
-          <select
-            id="description"
-            required
-            onChange={(e) =>
-              setDescription(e.target.value)
-            }
-            value={description}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
-          >
-            {options.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
+        <div className="grid grid-cols-2 gap-x-4 gap-y-0">
+          <div className="mb-1">
+            <label
+              htmlFor="reserved_date"
+              className="block text-gray-700 font-semibold text-left mb-1"
+            >
+              Ngày
+            </label>
+            <input
+              type="date"
+              id="reserved_date"
+              name="time"
+              required
+              onChange={(e) => setTime(e.target.value)}
+              value={time}
+              placeholder="2023/09/30"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none h-12"
+            />
+          </div>
+          <div className="mb-1">
+            <label
+              htmlFor="reserved_time"
+              className="block text-gray-700 font-semibold text-left mb-1"
+            >
+              Giờ
+            </label>
+            <input
+              type="text"
+              id="reserved_time"
+              name="reserved_time"
+              required
+              onChange={(e) => setReservedTime(e.target.value)}
+              value={reservedTime}
+              placeholder="19-21H"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none h-12"
+            />
+          </div>
+          <div className="mb-1">
+            <label
+              htmlFor="account"
+              className="block text-gray-700 font-semibold text-left mb-1"
+            >
+              Account
+            </label>
+            <select
+              id="account"
+              required
+              onChange={(e) => setAccount(e.target.value)}
+              value={account}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none h-12"
+            >
+              {accounts.map((account) => (
+                <option key={account} value={account}>
+                  {account}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-1">
+            <label
+              htmlFor="deadline"
+              className="block text-gray-700 font-semibold text-left mb-1"
+            >
+              Hạn hủy sân
+            </label>
+            <input
+              type="date"
+              id="deadline"
+              required
+              name="deadline"
+              onChange={(e) => setDeadline(e.target.value)}
+              value={deadline}
+              placeholder="2023/09/30"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none h-12"
+            />
+          </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="mb-1">
@@ -166,15 +192,18 @@ function AddEvent({ onClose, open }) {
                 setAmount(e.target.value);
                 const parsedDate = new Date(time);
                 parsedDate.setDate(parsedDate.getDate() - 4);
-                const formattedDate = parsedDate.toISOString().split('T')[0];
+                const formattedDate = parsedDate.toISOString().split("T")[0];
                 setDeadline(formattedDate);
-                setNote("Anh em nhớ đăng ký sớm trước " + formattedDate.replace(/-/g, '/') + " nha");
-              }
-              }
+                setNote(
+                  "Anh em nhớ đăng ký sớm trước " +
+                    formattedDate.replace(/-/g, "/") +
+                    " nha"
+                );
+              }}
               placeholder="3"
               value={amount}
               rows="4"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none "
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none h-12"
             ></input>
           </div>
           <div className="mb-1">
@@ -188,34 +217,54 @@ function AddEvent({ onClose, open }) {
               id="participant"
               required
               type="number"
-              onChange={(e) =>
-                setParticipant(e.target.value)
-              }
+              onChange={(e) => setParticipant(e.target.value)}
               placeholder="16"
               value={participant}
               rows="4"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none "
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none h-12"
             ></input>
           </div>
         </div>
         <div className="mb-1">
           <label
-            htmlFor="deadline"
+            htmlFor="title"
             className="block text-gray-700 font-semibold text-left mb-1"
           >
-            Hạn hủy sân
+            Tiêu đề
           </label>
           <input
-            type="date"
-            id="deadline"
+            type="text"
+            id="title"
+            name="title"
+            onChange={(e) => setTitle(e.target.value.toUpperCase())}
+            value={title}
             required
-            name="deadline"
-            onChange={(e) => setDeadline(e.target.value)}
-            value={deadline}
-            placeholder="2023/09/30"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
+            placeholder="THỨ 7, 2023/09/30, 19-21H"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none h-12"
           />
         </div>
+        <div className="mb-1">
+          <label
+            htmlFor="description"
+            className="block text-gray-700 font-semibold text-left mb-1"
+          >
+            Địa chỉ
+          </label>
+          <select
+            id="description"
+            required
+            onChange={(e) => setDescription(e.target.value)}
+            value={description}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none h-12"
+          >
+            {options.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div className="mb-1">
           <label
             htmlFor="note"
@@ -235,7 +284,9 @@ function AddEvent({ onClose, open }) {
           ></textarea>
         </div>
         <div className="mb-1">
-          <label className="block text-gray-700 font-semibold text-left">Thành viên cố định:</label>
+          <label className="block text-gray-700 font-semibold text-left">
+            Thành viên cố định:
+          </label>
           <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
             {users.map((user) => (
               <label key={user.id} className="flex items-center">
@@ -249,17 +300,16 @@ function AddEvent({ onClose, open }) {
                 {user.name}
               </label>
             ))}
-
           </div>
         </div>
         <button
           type="submit"
           className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md font-semibold transition duration-300 ease-in-out"
         >
-          Done
+          THÊM
         </button>
       </form>
-    </AddEventModal >
+    </AddEventModal>
   );
 }
 
