@@ -4,18 +4,30 @@ import { db } from "../firebase";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 
 function AddEvent({ onClose, open }) {
-  const [title, setTitle] = useState("");
-  const [time, setTime] = useState("");
-  const [description, setDescription] = useState("");
-  const [amount, setAmount] = useState("");
-  const [participant, setParticipant] = useState("");
-  const [deadline, setDeadline] = useState("");
-  const [members, setMembers] = useState([]);
-  const [createdBy, _setCreatedBy] = useState("Thanh");
-  const [note, setNote] = useState("");
-  const [account, setAccount] = useState("");
-  const [reservedDate, setReservedDate] = useState("");
-  const [reservedTime, setReservedTime] = useState("");
+  // Define an array of options
+  const options = [
+    "戸田スポーツセンター",
+    "西スポーツセンター",
+    "体育武道センター",
+  ];
+
+  // Define an array of options
+  const accounts = ["Thế Anh", "Dũng"];
+
+  const getDayOfWeek = (data) => {
+    const date = new Date(data);
+    const daysOfWeek = [
+      "CHỦ NHẬT",
+      "THỨ 2",
+      "THỨ 3",
+      "THỨ 4",
+      "THỨ 5",
+      "THỨ 6",
+      "THỨ 7",
+    ];
+    const dayIndex = date.getDay();
+    return daysOfWeek[dayIndex];
+  };
 
   // Create state for user checkboxes
   const [userCheckboxes, setUserCheckboxes] = useState({
@@ -37,6 +49,19 @@ function AddEvent({ onClose, open }) {
     { id: "member6", name: "Duy" },
   ];
 
+  const [title, setTitle] = useState("");
+  const [time, setTime] = useState("");
+  const [description, setDescription] = useState(options[0]);
+  const [amount, setAmount] = useState("");
+  const [participant, setParticipant] = useState("");
+  const [deadline, setDeadline] = useState("");
+  const [members, setMembers] = useState([]);
+  const [createdBy, _setCreatedBy] = useState("Thanh");
+  const [note, setNote] = useState("");
+  const [account, setAccount] = useState(accounts[0]);
+  const [reservedDate, setReservedDate] = useState("");
+  const [reservedTime, setReservedTime] = useState("");
+
   // Function to handle checkbox changes
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
@@ -52,15 +77,18 @@ function AddEvent({ onClose, open }) {
     try {
       await addDoc(collection(db, "events"), {
         title: title,
-        time: new Date(time),
-        description: description,
+        time: new Date(reservedDate),
+        description: `${description} (${account})`,
         amount: amount,
         members: members,
         createdBy: createdBy,
         completed: false,
         note: note,
         participant: participant,
-        deadline: deadline,
+        reservedDate: new Date(reservedDate),
+        reservedTime: reservedTime,
+        account: account,
+        deadline: new Date(deadline),
         created: Timestamp.now(),
         updated: Timestamp.now(),
       });
@@ -82,16 +110,6 @@ function AddEvent({ onClose, open }) {
     setMembers(selectedMembers);
   };
 
-  // Define an array of options
-  const options = [
-    "戸田スポーツセンター",
-    "西スポーツセンター",
-    "体育武道センター",
-  ];
-
-  // Define an array of options
-  const accounts = ["Thế Anh", "Dũng"];
-
   useEffect(() => {
     getSelectedMembers();
   }, [userCheckboxes]);
@@ -99,7 +117,7 @@ function AddEvent({ onClose, open }) {
   return (
     <AddEventModal modalLabel="THÊM SÂN" onClose={onClose} open={open}>
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 gap-x-4 gap-y-0">
+        <div className="grid grid-cols-2 gap-x-4">
           <div className="mb-1">
             <label
               htmlFor="reserved_date"
@@ -110,10 +128,10 @@ function AddEvent({ onClose, open }) {
             <input
               type="date"
               id="reserved_date"
-              name="time"
+              name="reserved_date"
               required
-              onChange={(e) => setTime(e.target.value)}
-              value={time}
+              onChange={(e) => setReservedDate(e.target.value)}
+              value={reservedDate}
               placeholder="2023/09/30"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none h-12"
             />
@@ -130,12 +148,71 @@ function AddEvent({ onClose, open }) {
               id="reserved_time"
               name="reserved_time"
               required
-              onChange={(e) => setReservedTime(e.target.value)}
+              onChange={(e) => {
+                setReservedTime(e.target.value);
+              }}
               value={reservedTime}
               placeholder="19-21H"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none h-12"
             />
           </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="mb-1">
+            <label
+              htmlFor="amount"
+              className="block text-gray-700 font-semibold text-left mb-1"
+            >
+              Số sân
+            </label>
+            <input
+              id="amount"
+              required
+              type="number"
+              onChange={(e) => {
+                setAmount(e.target.value);
+                const parsedDate = new Date(reservedDate);
+                parsedDate.setDate(parsedDate.getDate() - 4);
+                const formattedDate = parsedDate.toISOString().split("T")[0];
+                setDeadline(formattedDate);
+                setNote(
+                  "Anh em đăng ký trước " +
+                    formattedDate.replace(/-/g, "/") +
+                    " nha"
+                );
+                const inputTitle =
+                  getDayOfWeek(reservedDate) +
+                  `, ${reservedDate
+                    .toString()
+                    .replace(/-/g, "/")}, ${reservedTime}`;
+                setTitle(inputTitle);
+              }}
+              placeholder="3"
+              value={amount}
+              rows="4"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none h-12"
+            ></input>
+          </div>
+          <div className="mb-1">
+            <label
+              htmlFor="participant"
+              className="block text-gray-700 font-semibold text-left mb-1"
+            >
+              Giới hạn số người
+            </label>
+            <input
+              id="participant"
+              required
+              type="number"
+              onChange={(e) => setParticipant(e.target.value)}
+              placeholder="16"
+              value={participant}
+              rows="4"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none h-12"
+            ></input>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
           <div className="mb-1">
             <label
               htmlFor="account"
@@ -176,55 +253,6 @@ function AddEvent({ onClose, open }) {
             />
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="mb-1">
-            <label
-              htmlFor="amount"
-              className="block text-gray-700 font-semibold text-left mb-1"
-            >
-              Số sân
-            </label>
-            <input
-              id="amount"
-              required
-              type="number"
-              onChange={(e) => {
-                setAmount(e.target.value);
-                const parsedDate = new Date(time);
-                parsedDate.setDate(parsedDate.getDate() - 4);
-                const formattedDate = parsedDate.toISOString().split("T")[0];
-                setDeadline(formattedDate);
-                setNote(
-                  "Anh em nhớ đăng ký sớm trước " +
-                    formattedDate.replace(/-/g, "/") +
-                    " nha"
-                );
-              }}
-              placeholder="3"
-              value={amount}
-              rows="4"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none h-12"
-            ></input>
-          </div>
-          <div className="mb-1">
-            <label
-              htmlFor="participant"
-              className="block text-gray-700 font-semibold text-left mb-1"
-            >
-              Giới hạn số người
-            </label>
-            <input
-              id="participant"
-              required
-              type="number"
-              onChange={(e) => setParticipant(e.target.value)}
-              placeholder="16"
-              value={participant}
-              rows="4"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none h-12"
-            ></input>
-          </div>
-        </div>
         <div className="mb-1">
           <label
             htmlFor="title"
@@ -253,11 +281,13 @@ function AddEvent({ onClose, open }) {
           <select
             id="description"
             required
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => {
+              setDescription(e.target.value);
+            }}
             value={description}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none h-12"
           >
-            {options.map((option) => (
+            {options.map((option, index) => (
               <option key={option} value={option}>
                 {option}
               </option>

@@ -220,15 +220,17 @@ function App() {
 
       const batch = [];
       querySnapshot.forEach((_doc) => {
-        const oldValue = _doc.data().time;
-        const newValue = oldValue;
+        const acc = _doc.data().account;
+        const desc = _doc.data().description;
+        const newValue = `${desc} (${acc})`;
+
         // const oldValue = _doc.data().time.toDate(); // Replace with your field name
         // const parsedDate = new Date(oldValue);
         // parsedDate.setDate(parsedDate.getDate() - 4);
         // const newValue = parsedDate;
 
         const docRef = doc(db, _collection, _doc.id); // Replace with your collection name
-        batch.push(updateDoc(docRef, { deadline: newValue })); // Replace with your field name
+        batch.push(updateDoc(docRef, { description: newValue })); // Replace with your field name
       });
 
       await Promise.all(batch);
