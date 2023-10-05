@@ -36,7 +36,7 @@ const EventTable = ({ events }) => {
           {events &&
             events.map((event) => {
               const updatedDatetime = new Date(event.data.updated.toDate());
-              const deadlineDatetime = new Date(event.data.deadline.toDate());
+              // const deadlineDatetime = new Date(event.data.deadline.toDate());
               const options = {
                 year: 'numeric',
                 month: 'numeric',
@@ -47,7 +47,7 @@ const EventTable = ({ events }) => {
                 hour12: false, // Use 24-hour format
               };
               const updatedAt = updatedDatetime.toLocaleString(undefined, options);
-              const deadlineAt = deadlineDatetime.toLocaleString(undefined, options);
+              // const deadlineAt = deadlineDatetime.toLocaleString(undefined, options);
 
               return !event.data.completed && (
                 <tr key={event.id}>
@@ -78,7 +78,7 @@ const EventTable = ({ events }) => {
                   </td>
                   <td className="px-6 py-4 whitespace-no-wrap text-left">
                     <div className="text-sm leading-5 text-gray-900">
-                      { deadlineAt.toString().split(',')[0].split(' ')[0] }
+                      {/* { deadlineAt.toString().split(',')[0].split(' ')[0] } */}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-no-wrap text-left">
