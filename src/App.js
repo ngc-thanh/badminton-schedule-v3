@@ -11,8 +11,9 @@ import {
   addDoc,
   Timestamp,
 } from "firebase/firestore";
-import { db, analytics } from "./firebase";
+import { db } from "./firebase";
 
+import EditEvent from "./components/EditEvent";
 import AddEvent from "./components/AddEvent";
 import Event from "./components/Event";
 import EventTable from "./components/EventTable";
@@ -21,6 +22,8 @@ import UnlockModal from "./components/UnlockModal";
 import "./App.css";
 
 function App() {
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [editEvent, setEditEvent] = useState({});
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openUnlockModal, setOpenUnlockModal] = useState(false);
   const [events, setEvents] = useState([]);
@@ -83,11 +86,15 @@ function App() {
   };
 
   const handleUnlockClick = (password) => {
-    console.log(password);
     if (password === process.env.REACT_APP_PASSWORD) {
       setOpenUnlockModal(false);
       setIsAdmin(true);
     }
+  };
+
+  const handleEditEventClick = (data) => {
+    setOpenEditModal(true);
+    setEditEvent(data);
   };
 
   const handleUpdateUser = async (ok, cancel, delay) => {
@@ -339,7 +346,10 @@ function App() {
         </div>
         {isAdmin && (
           <div className="mt-10">
-            <EventTable events={events} />
+                  {openEditModal && (
+        <EditEvent onClose={() => setOpenEditModal(false)} open={openEditModal} event={editEvent}/>
+      )}
+            <EventTable events={events} onClickRow={handleEditEventClick}/>
           </div>
         )}
         {/* {isAdmin && (

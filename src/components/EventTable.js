@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 
-const EventTable = ({ events }) => {
-  events = events.sort((a, b) => (a.data.deadline - b.data.deadline));
+const EventTable = ({ events, onClickRow }) => {
+  const handleRowClick = (data) => {
+    onClickRow(data);
+  };
 
   return (
     <div className="overflow-x-auto">
@@ -13,7 +15,7 @@ const EventTable = ({ events }) => {
               NGÀY
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              TRẠNG THÁI
+              SÂN
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
               GIỜ
@@ -50,7 +52,7 @@ const EventTable = ({ events }) => {
               const deadlineAt = deadlineDatetime.toLocaleString(undefined, options);
 
               return !event.data.completed && (
-                <tr key={event.id}>
+                <tr key={event.id} onClick={() => handleRowClick(event)}>
                   <td className="px-6 py-4 whitespace-no-wrap text-left">
                     <div className="text-sm leading-5 font-medium text-gray-900">
                       {event.data.title.split(', ')[0] + ', ' + event.data.title.split(', ')[1]}
@@ -58,7 +60,7 @@ const EventTable = ({ events }) => {
                   </td>
                   <td className="px-6 py-4 whitespace-no-wrap text-left">
                     <div className="text-sm leading-5 font-medium text-gray-900">
-                      {event.data.completed ? 'ĐÃ KẾT THÚC/HUỶ' : 'ĐANG MỞ'}
+                      {event.data.description}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-no-wrap text-left">
