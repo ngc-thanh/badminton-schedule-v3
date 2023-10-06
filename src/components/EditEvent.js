@@ -29,7 +29,7 @@ function EditEvent({ onClose, open, event }) {
   };
 
   return (
-    <EditEventModal modalLabel="SỬA SÂN" onClose={onClose} open={open}>
+    <EditEventModal modalLabel="SỬA THÔNG TIN SÂN" onClose={onClose} open={open}>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-4 mb-2">
           <div className="mb-1">
