@@ -49,11 +49,6 @@ const Event = ({
     onDoneClick({ id, title, description, amount, members, completed });
   };
 
-  const handleEditClick = () => {
-    // completed = true;
-    // onDoneClick({ id, title, description, amount, members, completed });
-  };
-
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const handleDeleteClick = (index) => {
@@ -100,12 +95,6 @@ const Event = ({
         </div>
         {isAdmin && (
           <div className="mb-4 text-left">
-            <button
-              className="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-600 mr-2"
-              onClick={handleEditClick}
-            >
-              SỬA
-            </button>
             <button
               className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
               onClick={handleDoneClick}
