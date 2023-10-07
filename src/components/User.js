@@ -1,35 +1,38 @@
 import React from "react";
 
-const User = ({ users }) => {
+const User = ({ users, onClickRow }) => {
+  const handleRowClick = (data) => {
+    onClickRow(data);
+  };
   return (
     <div className="overflow-x-auto">
-      <h1 className="text-left mb-2 font-bold">USERS ({ users.length })</h1>
+      <h1 className="text-left mb-2 font-bold">USERS ({users.length})</h1>
       <table className="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              Name
+              TÊN
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              Point
+              ĐIỂM
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
               OK
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              CANCEL
+              HUỶ
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              DELAY
+              TRỄ
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              IP Address
+              IP
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              Updated At
+              UPDATED
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              Created At
+              STATUS
             </th>
           </tr>
         </thead>
@@ -39,16 +42,22 @@ const User = ({ users }) => {
               const updatedDatetime = new Date(user.data.updated.toDate());
               const createdDatetime = new Date(user.data.created.toDate());
               const options = {
-                year: 'numeric',
-                month: 'numeric',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric',
-                second: 'numeric',
+                year: "numeric",
+                month: "numeric",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                second: "numeric",
                 hour12: false, // Use 24-hour format
               };
-              const updatedAt = updatedDatetime.toLocaleString(undefined, options);
-              const createdAt = createdDatetime.toLocaleString(undefined, options);
+              const updatedAt = updatedDatetime.toLocaleString(
+                undefined,
+                options
+              );
+              const createdAt = createdDatetime.toLocaleString(
+                undefined,
+                options
+              );
 
               return (
                 <tr key={user.id}>
@@ -87,9 +96,12 @@ const User = ({ users }) => {
                       {updatedAt}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-no-wrap text-left">
+                  <td
+                    className="px-6 py-4 whitespace-no-wrap text-left"
+                    onClick={() => handleRowClick(user)}
+                  >
                     <div className="text-sm leading-5 text-gray-900">
-                      {createdAt}
+                      {user.data.active ? "" : "X"}
                     </div>
                   </td>
                 </tr>

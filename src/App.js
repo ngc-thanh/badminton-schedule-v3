@@ -15,6 +15,7 @@ import {
 import { db } from "./firebase";
 
 import EditEvent from "./components/EditEvent";
+import EditUser from "./components/EditUser";
 import AddEvent from "./components/AddEvent";
 import Event from "./components/Event";
 import EventTable from "./components/EventTable";
@@ -25,6 +26,8 @@ import "./App.css";
 function App() {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [editEvent, setEditEvent] = useState({});
+  const [openEditUserModal, setOpenEditUserModal] = useState(false);
+  const [editUser, setEditUser] = useState({});
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openUnlockModal, setOpenUnlockModal] = useState(false);
   const [events, setEvents] = useState([]);
@@ -96,6 +99,11 @@ function App() {
   const handleEditEventClick = (data) => {
     setOpenEditModal(true);
     setEditEvent(data);
+  };
+
+  const handleEditUserClick = (data) => {
+    setOpenEditUserModal(true);
+    setEditUser(data);
   };
 
   const handleUpdateUser = async (ok, cancel, delay) => {
@@ -231,9 +239,9 @@ function App() {
 
       const batch = [];
       querySnapshot.forEach((_doc) => {
-        const acc = _doc.data().account;
+        // const acc = _doc.data().account;
         const desc = _doc.data().description;
-        const newValue = `${desc} (${acc})`;
+        const newValue = desc.split(" ")[0];
 
         // const oldValue = _doc.data().time.toDate(); // Replace with your field name
         // const parsedDate = new Date(oldValue);
@@ -285,24 +293,17 @@ function App() {
       collection(db, "users"),
       orderBy("updated", "desc")
     );
-
-    getDocs(userColRef)
-      .then((querySnapshot) => {
-        const activeUsers = [];
-        querySnapshot.forEach((_doc) => {
-          const data = {
-            id: _doc.id,
-            data: _doc.data(),
-          };
-
-          activeUsers.push(data);
+    onSnapshot(userColRef, (snapshot) => {
+      const data = [];
+      snapshot.docs.map((_doc) => {
+        data.push({
+          id: _doc.id,
+          data: _doc.data(),
         });
-
-        setUsers(activeUsers);
-      })
-      .catch((error) => {
-        console.log("Error getting documents:", error);
       });
+
+      setUsers(data);
+    });
 
     if (localStorageIpAddress) {
       setCurrentIp(localStorageIpAddress);
@@ -357,6 +358,7 @@ function App() {
                   id={event.id}
                   key={event.id}
                   title={event.data.title}
+                  account={event.data.account}
                   description={event.data.description}
                   amount={event.data.amount}
                   members={event.data.members}
@@ -387,7 +389,18 @@ function App() {
         )}
         {isAdmin && (
           <div className="mt-10">
-            <User users={users} />
+            {openEditUserModal && (
+              <EditUser
+                onClose={() => setOpenEditUserModal(false)}
+                open={openEditUserModal}
+                user={editUser}
+              />
+            )}
+          </div>
+        )}
+        {isAdmin && (
+          <div className="mt-10">
+            <User users={users} onClickRow={handleEditUserClick} />
           </div>
         )}
       </div>
