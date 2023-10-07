@@ -10,6 +10,7 @@ import {
   updateDoc,
   addDoc,
   Timestamp,
+  limit,
 } from "firebase/firestore";
 import { db } from "./firebase";
 
@@ -102,7 +103,8 @@ function App() {
 
     const q = query(
       collection(db, "users"),
-      where(fieldNameToQuery, "==", currentIp)
+      where(fieldNameToQuery, "==", currentIp),
+      limit(1)
     );
 
     getDocs(q)
@@ -158,7 +160,7 @@ function App() {
 
   const createUser = async (newMember) => {
     try {
-      await addDoc(collection(db, "users"), {
+      const createNewUser = await addDoc(collection(db, "users"), {
         ipAddress: currentIp,
         name: newMember,
         ok: 0,
@@ -169,6 +171,7 @@ function App() {
         created: Timestamp.now(),
         updated: Timestamp.now(),
       });
+      console.log(createNewUser);
     } catch (err) {
       alert("createUser error: " + err);
     }
@@ -181,7 +184,8 @@ function App() {
   ) => {
     const q = query(
       collection(db, collectionName),
-      where(fieldNameToCheck, "==", valueToCheck)
+      where(fieldNameToCheck, "==", valueToCheck),
+      limit(1)
     );
 
     // Return a promise that resolves to true if the record exists, false otherwise
@@ -265,16 +269,27 @@ function App() {
 
     const userColRef = query(
       collection(db, "users"),
+      where('active', '==', true),
       orderBy("updated", "desc")
     );
-    onSnapshot(userColRef, (snapshot) => {
-      setUsers(
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          data: doc.data(),
-        }))
-      );
-    });
+
+    getDocs(userColRef)
+      .then((querySnapshot) => {
+        const activeUsers = [];
+        querySnapshot.forEach((_doc) => {
+          const data = {
+            id: _doc.id,
+            data: _doc.data(),
+          }
+
+          activeUsers.push(data);
+        });
+
+        setUsers(activeUsers);
+      })
+      .catch((error) => {
+        console.log('Error getting documents:', error);
+      })
 
     if (localStorageIpAddress) {
       setCurrentIp(localStorageIpAddress);
@@ -352,11 +367,11 @@ function App() {
             <EventTable events={events} onClickRow={handleEditEventClick}/>
           </div>
         )}
-        {/* {isAdmin && (
+        {isAdmin && (
           <div className="mt-10">
             <User users={users} />
           </div>
-        )} */}
+        )}
       </div>
     </div>
   );
