@@ -9,6 +9,7 @@ const Event = ({
   members,
   completed,
   note,
+  account,
   deadline,
   participant,
   onOkClick,
@@ -44,9 +45,14 @@ const Event = ({
     onCancelClick({ id, title, description, amount, members, completed, removeName});
   };
 
-  const handleDoneClick = () => {
+  const handleDoneClick = (e) => {
+    e.preventDefault();
     completed = true;
-    onDoneClick({ id, title, description, amount, members, completed });
+    setDeleteModalOpen(true);
+    setDeleteData({
+      title: title + ', ' + description,
+    });
+    // onDoneClick({ id, title, description, amount, members, completed });
   };
 
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -82,7 +88,7 @@ const Event = ({
       <div className="mb-4 flex-grow">
         <div>
           <h2 className="text-xl font-semibold text-left">{title}</h2>
-          <p className="text-gray-500 text-left">{description}</p>
+          <p className="text-gray-500 text-left">{description} ({account})</p>
         </div>
         <div className="mb-4">
           <p className="text-lg font-semibold text-left">
@@ -97,7 +103,7 @@ const Event = ({
           <div className="mb-4 text-left">
             <button
               className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-              onClick={handleDoneClick}
+              onClick={(e) => handleDoneClick(e)}
             >
               HUỶ SÂN
             </button>

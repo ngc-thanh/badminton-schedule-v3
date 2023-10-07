@@ -15,10 +15,10 @@ const EventTable = ({ events, onClickRow }) => {
               NGÀY
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              SÂN
+              GIỜ
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              GIỜ
+              SÂN
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
               SỐ SÂN
@@ -52,20 +52,20 @@ const EventTable = ({ events, onClickRow }) => {
               const deadlineAt = deadlineDatetime.toLocaleString(undefined, options);
 
               return !event.data.completed && (
-                <tr key={event.id} onClick={() => handleRowClick(event)}>
+                <tr key={event.id}>
                   <td className="px-6 py-4 whitespace-no-wrap text-left">
                     <div className="text-sm leading-5 font-medium text-gray-900">
                       {event.data.title.split(', ')[0] + ', ' + event.data.title.split(', ')[1]}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-no-wrap text-left">
-                    <div className="text-sm leading-5 font-medium text-gray-900">
-                      {event.data.description}
+                    <div className="text-sm leading-5 text-gray-900">
+                      {event.data.reservedTime}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-no-wrap text-left">
-                    <div className="text-sm leading-5 text-gray-900">
-                      {event.data.reservedTime}
+                    <div className="text-sm leading-5 font-medium text-gray-900">
+                      {event.data.description}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-no-wrap text-left">
@@ -80,10 +80,10 @@ const EventTable = ({ events, onClickRow }) => {
                   </td>
                   <td className="px-6 py-4 whitespace-no-wrap text-left">
                     <div className="text-sm leading-5 text-gray-900">
-                      { deadlineAt.toString().split(',')[0].split(' ')[0] }
+                      { deadlineAt.split(',')[0] }
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-no-wrap text-left">
+                  <td className="px-6 py-4 whitespace-no-wrap text-left" onClick={() => handleRowClick(event)}>
                     <div className="text-sm leading-5 text-gray-900">
                       {updatedAt}
                     </div>

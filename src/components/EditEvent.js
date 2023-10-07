@@ -1,15 +1,12 @@
 import EditEventModal from "./EditEventModal";
 import { useState, useEffect } from "react";
-import {
-  doc,
-  updateDoc,
-  Timestamp,
-} from "firebase/firestore";
+import { doc, updateDoc, Timestamp } from "firebase/firestore";
 import { db } from "../firebase";
 
 function EditEvent({ onClose, open, event }) {
   const [amount, setAmount] = useState(event.data.amount);
   const [participant, setParticipant] = useState(event.data.participant);
+  const [title, setTitle] = useState(event.data.title);
 
   /* function to add new task to firestore */
   const handleSubmit = async (e) => {
@@ -17,6 +14,7 @@ function EditEvent({ onClose, open, event }) {
     const eventDocRef = doc(db, "events", event.id);
     try {
       await updateDoc(eventDocRef, {
+        title: title,
         amount: amount,
         participant: participant,
         updated: Timestamp.now(),
@@ -29,8 +27,30 @@ function EditEvent({ onClose, open, event }) {
   };
 
   return (
-    <EditEventModal modalLabel="SỬA THÔNG TIN SÂN" onClose={onClose} open={open}>
+    <EditEventModal
+      modalLabel="SỬA THÔNG TIN SÂN"
+      onClose={onClose}
+      open={open}
+    >
       <form onSubmit={handleSubmit}>
+        <div className="mb-1">
+          <label
+            htmlFor="title"
+            className="block text-gray-700 font-semibold text-left mb-1"
+          >
+            Tiêu đề
+          </label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            onChange={(e) => setTitle(e.target.value.toUpperCase())}
+            value={title}
+            required
+            placeholder="THỨ 7, 2023/09/30, 19-21H"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none h-12"
+          />
+        </div>
         <div className="grid grid-cols-2 gap-4 mb-2">
           <div className="mb-1">
             <label
