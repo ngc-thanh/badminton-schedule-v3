@@ -246,7 +246,7 @@ function App() {
 
       await Promise.all(batch);
 
-      console.log('All documents updated successfully.');
+      console.log("All documents updated successfully.");
     } catch (error) {
       console.log(`Error updating documents: ${error.message}`);
     }
@@ -257,19 +257,33 @@ function App() {
     // updateData('events');
 
     const localStorageIpAddress = localStorage.getItem("NS_KWGC");
-    const eventColRef = query(collection(db, "events"), orderBy("time", "asc"));
+    const eventColRef = query(
+      collection(db, "events"),
+      orderBy("reservedDate")
+    );
     onSnapshot(eventColRef, (snapshot) => {
-      setEvents(
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          data: doc.data(),
-        }))
-      );
+      const data = [];
+      snapshot.docs.map((_doc) => {
+        data.push({
+          id: _doc.id,
+          data: _doc.data(),
+        });
+      });
+
+      data.sort((a, b) => {
+        const dateA = a.data.title.split(", ")[1];
+        const dateB = b.data.title.split(", ")[1];
+        if (dateA === dateB) {
+          return a.data.reservedTime.localeCompare(b.data.reservedTime);
+        }
+      });
+
+      setEvents(data);
     });
 
     const userColRef = query(
       collection(db, "users"),
-      where('active', '==', true),
+      where("active", "==", true),
       orderBy("updated", "desc")
     );
 
@@ -280,7 +294,7 @@ function App() {
           const data = {
             id: _doc.id,
             data: _doc.data(),
-          }
+          };
 
           activeUsers.push(data);
         });
@@ -288,8 +302,8 @@ function App() {
         setUsers(activeUsers);
       })
       .catch((error) => {
-        console.log('Error getting documents:', error);
-      })
+        console.log("Error getting documents:", error);
+      });
 
     if (localStorageIpAddress) {
       setCurrentIp(localStorageIpAddress);
@@ -337,8 +351,8 @@ function App() {
       )}
       <div className="container mx-auto py-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-8">
-          {events.map(
-            (event) =>
+          {events.map((event) => {
+            return (
               !event.data.completed && (
                 <Event
                   id={event.id}
@@ -357,14 +371,19 @@ function App() {
                   isAdmin={isAdmin}
                 />
               )
-          )}
+            );
+          })}
         </div>
         {isAdmin && (
           <div className="mt-10">
-                  {openEditModal && (
-        <EditEvent onClose={() => setOpenEditModal(false)} open={openEditModal} event={editEvent}/>
-      )}
-            <EventTable events={events} onClickRow={handleEditEventClick}/>
+            {openEditModal && (
+              <EditEvent
+                onClose={() => setOpenEditModal(false)}
+                open={openEditModal}
+                event={editEvent}
+              />
+            )}
+            <EventTable events={events} onClickRow={handleEditEventClick} />
           </div>
         )}
         {isAdmin && (
