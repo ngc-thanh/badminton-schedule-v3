@@ -20,9 +20,11 @@ const ConfirmDeleteModal = ({
         </p>
         <div className="text-left ml-1 mb-4">
           <p className="text-xl font-bold">{deleteData.title}</p>
-          <p className="text-base">
-            {deleteData.index + 1}. {deleteData.member}
-          </p>
+          {deleteData.member && (
+            <p className="text-base">
+              {deleteData.index + 1}. {deleteData.member}
+            </p>
+          )}
         </div>
         <div className="flex justify-end">
           <button
