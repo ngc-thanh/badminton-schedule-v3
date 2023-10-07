@@ -19,9 +19,9 @@ const ConfirmDeleteModal = ({
           Bạn chắc chắn muốn xóa thông tin bên dưới phải không?
         </p>
         <div className="text-left ml-1 mb-4">
-          <p className="text-xl font-bold">{deleteData.title}</p>
+          <p className="text-xl font-bold text-center">{deleteData.title}</p>
           {deleteData.member && (
-            <p className="text-base">
+            <p className="text-base text-center">
               {deleteData.index + 1}. {deleteData.member}
             </p>
           )}

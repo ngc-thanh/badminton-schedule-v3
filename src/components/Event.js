@@ -50,7 +50,7 @@ const Event = ({
     completed = true;
     setDeleteModalOpen(true);
     setDeleteData({
-      title: title + ', ' + description,
+      title: `${title}, ${amount} sân ${description}`
     });
     // onDoneClick({ id, title, description, amount, members, completed });
   };
