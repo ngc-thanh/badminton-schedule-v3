@@ -283,7 +283,6 @@ function App() {
 
     const userColRef = query(
       collection(db, "users"),
-      where("active", "==", true),
       orderBy("updated", "desc")
     );
 
