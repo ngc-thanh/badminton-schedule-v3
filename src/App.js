@@ -63,19 +63,23 @@ function App() {
   };
 
   const handleCancelClick = (cardData) => {
-    checkRecordExists("users", "ipAddress", localStorage.getItem("NS_KWGC"))
-      .then((exists) => {
-        if (!exists) {
-          createUser(cardData.removeName);
-        }
-      })
-      .catch((error) => {
-        console.error("checkRecordExists Error:", error);
-      });
+    if (!cardData.removeName) {
+      handleDoneClick(cardData);
+    } else {
+      checkRecordExists("users", "ipAddress", localStorage.getItem("NS_KWGC"))
+        .then((exists) => {
+          if (!exists) {
+            createUser(cardData.removeName);
+          }
+        })
+        .catch((error) => {
+          console.error("checkRecordExists Error:", error);
+        });
 
-    handleUpdateEvent(cardData);
-    handleUpdateUser(0, 1, isWithin4Days(cardData.time) ? 0 : 1);
-    createBookingDetail(false, cardData.title, cardData.id);
+      handleUpdateEvent(cardData);
+      handleUpdateUser(0, 1, isWithin4Days(cardData.time) ? 0 : 1);
+      createBookingDetail(false, cardData.title, cardData.id);
+    }
   };
 
   const handleDoneClick = (cardData) => {
@@ -105,7 +109,7 @@ function App() {
     const q = query(
       collection(db, "users"),
       where(fieldNameToQuery, "==", localStorage.getItem("NS_KWGC")),
-      where('active', '==', true),
+      where("active", "==", true),
       limit(1)
     );
 

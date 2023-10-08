@@ -42,15 +42,25 @@ const Event = ({
 
     const removeName = members[indexToRemove];
     members = updatedMembers;
-    onCancelClick({ id, title, description, amount, members, completed, removeName});
+    if (!deleteData.index) {
+      completed = true;
+    }
+    onCancelClick({
+      id,
+      title,
+      description,
+      amount,
+      members,
+      completed,
+      removeName,
+    });
   };
 
-  const handleDoneClick = (e) => {
-    e.preventDefault();
+  const handleDoneClick = () => {
     completed = true;
     setDeleteModalOpen(true);
     setDeleteData({
-      title: `${title}, ${amount} sân ${description}`
+      title: `${title}, ${amount} sân ${description}`,
     });
     // onDoneClick({ id, title, description, amount, members, completed });
   };
@@ -69,6 +79,7 @@ const Event = ({
   const handleDeleteConfirm = () => {
     // Handle delete logic here
     handleCancelClick(deleteData.index);
+    // handleDoneClick();
 
     // Close the modal
     setDeleteModalOpen(false);
@@ -88,7 +99,9 @@ const Event = ({
       <div className="mb-4 flex-grow">
         <div>
           <h2 className="text-xl font-semibold text-left">{title}</h2>
-          <p className="text-gray-500 text-left">{description} ({account})</p>
+          <p className="text-gray-500 text-left">
+            {description} ({account})
+          </p>
         </div>
         <div className="mb-4">
           <p className="text-lg font-semibold text-left">
@@ -110,13 +123,16 @@ const Event = ({
           </div>
         )}
         <div>
-          <h3 className="text-lg font-semibold text-left">Đăng ký tham gia: { members.length }/{participant} người</h3>
+          <h3 className="text-lg font-semibold text-left">
+            Đăng ký tham gia: {members.length}/{participant} người
+          </h3>
           <ul className="list-disc list-inside list-none">
             {members &&
               members.map((member, index) => (
                 <div key={index} className="flex justify-between mb-1">
                   <li className="text-left">
-                    {index + 1}. {member} {isOver && index + 1 > participant ? ' (dự bị)' : ''}
+                    {index + 1}. {member}{" "}
+                    {isOver && index + 1 > participant ? " (dự bị)" : ""}
                   </li>
                   <button
                     className="pr-5 font-semibold text-lg text-red-500"
@@ -149,7 +165,7 @@ const Event = ({
           onClick={handleOkClick}
           disabled={name ? false : true}
         >
-          {name ? 'THAM GIA' : 'HÃY NHẬP TÊN'}
+          {name ? "THAM GIA" : "HÃY NHẬP TÊN"}
         </button>
       </div>
       <ConfirmDeleteModal
