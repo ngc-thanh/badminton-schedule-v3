@@ -33,22 +33,17 @@ function App() {
   const [events, setEvents] = useState([]);
   const [users, setUsers] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [currentIp, setCurrentIp] = useState("");
-  const [isNewUser, setIsNewUser] = useState(false);
 
   const handleOkClick = (cardData) => {
     checkRecordExists("users", "ipAddress", localStorage.getItem("NS_KWGC"))
       .then((exists) => {
-        setIsNewUser(exists);
+        if (!exists) {
+          createUser(cardData.removeName);
+        }
       })
       .catch((error) => {
         console.error("checkRecordExists Error:", error);
       });
-
-    if (!isNewUser) {
-      createUser(cardData.name);
-      setIsNewUser(false);
-    }
 
     handleUpdateEvent(cardData);
     handleUpdateUser(1, 0, isWithin4Days(cardData.time) ? 0 : 1);
@@ -70,15 +65,13 @@ function App() {
   const handleCancelClick = (cardData) => {
     checkRecordExists("users", "ipAddress", localStorage.getItem("NS_KWGC"))
       .then((exists) => {
-        setIsNewUser(exists);
+        if (!exists) {
+          createUser(cardData.removeName);
+        }
       })
       .catch((error) => {
         console.error("checkRecordExists Error:", error);
       });
-    if (!isNewUser) {
-      createUser(cardData.removeName);
-      setIsNewUser(false);
-    }
 
     handleUpdateEvent(cardData);
     handleUpdateUser(0, 1, isWithin4Days(cardData.time) ? 0 : 1);
@@ -111,7 +104,7 @@ function App() {
 
     const q = query(
       collection(db, "users"),
-      where(fieldNameToQuery, "==", currentIp),
+      where(fieldNameToQuery, "==", localStorage.getItem("NS_KWGC")),
       limit(1)
     );
 
@@ -156,7 +149,7 @@ function App() {
       await addDoc(collection(db, "booking_details"), {
         type: ok ? "OK" : "CANCEL",
         title: title,
-        ipAddress: currentIp,
+        ipAddress: localStorage.getItem("NS_KWGC"),
         eventId: eventId,
         created: Timestamp.now(),
         updated: Timestamp.now(),
@@ -169,7 +162,7 @@ function App() {
   const createUser = async (newMember) => {
     try {
       const createNewUser = await addDoc(collection(db, "users"), {
-        ipAddress: currentIp,
+        ipAddress: localStorage.getItem("NS_KWGC"),
         name: newMember,
         ok: 0,
         cancel: 0,
@@ -193,6 +186,7 @@ function App() {
     const q = query(
       collection(db, collectionName),
       where(fieldNameToCheck, "==", valueToCheck),
+      where("active", "==", true),
       limit(1)
     );
 
@@ -264,7 +258,6 @@ function App() {
     // addNewFieldToExistDocument('events', 'reservedTime', '');
     // updateData('events');
 
-    const localStorageIpAddress = localStorage.getItem("NS_KWGC");
     const eventColRef = query(
       collection(db, "events"),
       orderBy("reservedDate")
@@ -302,22 +295,15 @@ function App() {
         });
       });
 
-
       setUsers(data);
     });
 
-    if (localStorageIpAddress) {
-      setCurrentIp(localStorageIpAddress);
-      setIsAdmin(localStorageIpAddress === process.env.REACT_APP_IPV4_ADDRESS);
-    } else {
-      fetch("https://api.db-ip.com/v2/free/self")
-        .then((response) => response.json())
-        .then((data) => {
-          localStorage.setItem("NS_KWGC", data.ipAddress);
-          setCurrentIp(data.ipAddress);
-          setIsAdmin(data.ipAddress === process.env.REACT_APP_IPV4_ADDRESS);
-        });
-    }
+    fetch("https://api.db-ip.com/v2/free/self")
+      .then((response) => response.json())
+      .then((data) => {
+        localStorage.setItem("NS_KWGC", data.ipAddress);
+        setIsAdmin(data.ipAddress === process.env.REACT_APP_IPV4_ADDRESS);
+      });
   }, []);
 
   return (
