@@ -12,7 +12,7 @@ function AddEvent({ onClose, open }) {
   ];
 
   // Define an array of options
-  const accounts = ["Thế Anh", "Dũng"];
+  const accounts = ["Thế Anh", "Dũng", "Piasun"];
 
   const getDayOfWeek = (data) => {
     const date = new Date(data);
