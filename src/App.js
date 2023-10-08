@@ -105,6 +105,7 @@ function App() {
     const q = query(
       collection(db, "users"),
       where(fieldNameToQuery, "==", localStorage.getItem("NS_KWGC")),
+      where('active', '==', true),
       limit(1)
     );
 
