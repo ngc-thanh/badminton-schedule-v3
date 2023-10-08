@@ -5,9 +5,11 @@ const EventTable = ({ events, onClickRow }) => {
     onClickRow(data);
   };
 
+const filteredEvents = events.filter((e) => e.data.completed === false);
+
   return (
     <div className="overflow-x-auto">
-      <h1 className="text-left mb-2 font-bold">LỊCH ĐẶT SÂN ({ events.length })</h1>
+      <h1 className="text-left mb-2 font-bold">LỊCH ĐẶT SÂN ({ filteredEvents.length })</h1>
       <table className="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>

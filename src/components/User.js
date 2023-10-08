@@ -4,9 +4,12 @@ const User = ({ users, onClickRow }) => {
   const handleRowClick = (data) => {
     onClickRow(data);
   };
+
+  const filteredUser = users.filter(u => u.data.active === true); 
+
   return (
     <div className="overflow-x-auto">
-      <h1 className="text-left mb-2 font-bold">USERS ({users.length})</h1>
+      <h1 className="text-left mb-2 font-bold">USERS ({filteredUser.length})</h1>
       <table className="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
@@ -59,7 +62,7 @@ const User = ({ users, onClickRow }) => {
                 options
               );
 
-              return (
+              return user.data.active && (
                 <tr key={user.id}>
                   <td className="px-6 py-4 whitespace-no-wrap text-left">
                     <div className="text-sm leading-5 font-medium text-gray-900">

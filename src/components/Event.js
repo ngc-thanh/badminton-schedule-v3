@@ -80,7 +80,7 @@ const Event = ({
   };
 
   useEffect(() => {
-    setIsOver(members.length >= amount * 4 + 4);
+    setIsOver(members.length >= participant);
   }, [members]);
 
   return (
