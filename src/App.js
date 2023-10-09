@@ -42,7 +42,7 @@ function App() {
         }
       })
       .catch((error) => {
-        console.error("checkRecordExists Error:", error);
+        alert("checkRecordExists Error:", error);
       });
 
     handleUpdateEvent(cardData);
@@ -70,7 +70,7 @@ function App() {
         }
       })
       .catch((error) => {
-        console.error("checkRecordExists Error:", error);
+        alert("checkRecordExists Error:", error);
       });
 
     handleUpdateEvent(cardData);
@@ -124,12 +124,12 @@ function App() {
               console.log("Document updated successfully.");
             })
             .catch((error) => {
-              console.error("Error updating document:", error);
+              alert("Error updating document:", error);
             });
         });
       })
       .catch((error) => {
-        console.error("Error querying Firestore:", error);
+        alert("Error querying Firestore:", error);
       });
   };
   const handleUpdateEvent = async (cardData) => {
@@ -173,7 +173,6 @@ function App() {
         created: Timestamp.now(),
         updated: Timestamp.now(),
       });
-      console.log(createNewUser);
     } catch (err) {
       alert("createUser error: " + err);
     }
@@ -195,7 +194,7 @@ function App() {
     return getDocs(q)
       .then((querySnapshot) => !querySnapshot.empty)
       .catch((error) => {
-        console.error("Error checkRecordExists: ", error);
+        alert("Error checkRecordExists: ", error);
         return false; // Return false in case of an error
       });
   };
@@ -223,7 +222,7 @@ function App() {
         console.log("Added the new field to all documents in the collection.");
       })
       .catch((error) => {
-        console.error("Error adding the new field: ", error);
+        alert("Error adding the new field: ", error);
       });
   };
 
@@ -251,7 +250,7 @@ function App() {
 
       console.log("All documents updated successfully.");
     } catch (error) {
-      console.log(`Error updating documents: ${error.message}`);
+      alert(`Error updating documents: ${error.message}`);
     }
   };
 
