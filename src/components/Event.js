@@ -42,33 +42,38 @@ const Event = ({
 
     const removeName = members[indexToRemove];
     members = updatedMembers;
-    if (!deleteData.index) {
-      completed = true;
-    }
     onCancelClick({
       id,
       title,
       description,
       amount,
       members,
-      completed,
+      completed: false,
       removeName,
     });
   };
 
   const handleDoneClick = () => {
-    completed = true;
-    setDeleteModalOpen(true);
+    setDeleteModalOpen({
+      open: true,
+      type: "done",
+    });
     setDeleteData({
       title: `${title}, ${amount} sân ${description}`,
     });
     // onDoneClick({ id, title, description, amount, members, completed });
   };
 
-  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState({
+    open: false,
+    type: "",
+  });
 
   const handleDeleteClick = (index) => {
-    setDeleteModalOpen(true);
+    setDeleteModalOpen({
+      open: true,
+      type: "delete",
+    });
     setDeleteData({
       title: title,
       index: index,
@@ -78,8 +83,18 @@ const Event = ({
 
   const handleDeleteConfirm = () => {
     // Handle delete logic here
-    handleCancelClick(deleteData.index);
-    // handleDoneClick();
+    if (isDeleteModalOpen.type === "delete") {
+      handleCancelClick(deleteData.index);
+    } else {
+      onDoneClick({
+        id,
+        title,
+        description,
+        amount,
+        members,
+        completed: true,
+      });
+    }
 
     // Close the modal
     setDeleteModalOpen(false);
@@ -171,7 +186,7 @@ const Event = ({
       <ConfirmDeleteModal
         title="XÁC NHẬN HỦY"
         deleteData={deleteData}
-        isOpen={isDeleteModalOpen}
+        isOpen={isDeleteModalOpen.open}
         onConfirm={handleDeleteConfirm}
         onCancel={handleDeleteCancel}
       />
