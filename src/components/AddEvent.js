@@ -78,7 +78,7 @@ function AddEvent({ onClose, open }) {
       await addDoc(collection(db, "events"), {
         title: title,
         time: new Date(reservedDate),
-        description: `${description} (${account})`,
+        description: description,
         amount: amount,
         members: members,
         createdBy: createdBy,
