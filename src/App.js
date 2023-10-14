@@ -38,7 +38,7 @@ function App() {
     checkRecordExists("users", "ipAddress", localStorage.getItem("NS_KWGC"))
       .then((exists) => {
         if (!exists) {
-          createUser(cardData.removeName);
+          createUser(cardData.name);
         }
       })
       .catch((error) => {
@@ -162,7 +162,7 @@ function App() {
 
   const createUser = async (newMember) => {
     try {
-      const createNewUser = await addDoc(collection(db, "users"), {
+      await addDoc(collection(db, "users"), {
         ipAddress: localStorage.getItem("NS_KWGC"),
         name: newMember,
         ok: 0,
