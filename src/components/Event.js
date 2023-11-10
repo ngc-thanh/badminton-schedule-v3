@@ -5,6 +5,7 @@ const Event = ({
   id,
   title,
   description,
+  map,
   amount,
   members,
   completed,
@@ -117,6 +118,9 @@ const Event = ({
           <p className="text-gray-500 text-left">
             {description} ({account})
           </p>
+          <a href={map} className="flex text-blue-500 hover:underline text-left">
+            Google map
+          </a>
         </div>
         <div className="mb-4">
           <p className="text-lg font-semibold text-left">

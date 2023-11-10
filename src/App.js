@@ -18,6 +18,7 @@ import EditEvent from "./components/EditEvent";
 import EditUser from "./components/EditUser";
 import AddEvent from "./components/AddEvent";
 import Event from "./components/Event";
+import EventCard from "./components/EventCard";
 import EventTable from "./components/EventTable";
 import User from "./components/User";
 import UnlockModal from "./components/UnlockModal";
@@ -199,6 +200,18 @@ function App() {
       });
   };
 
+  const googleMaps = {
+    "戸田スポーツセンター": "https://maps.app.goo.gl/gLnQ2cNd6dMsWBJW9",
+    "西スポーツセンター": "https://maps.app.goo.gl/EgsquvSXjHhQqiEa8",
+    "体育武道センター": "https://maps.app.goo.gl/Gba8wyF9FUMftkHZ7",
+    "戸塚スポーツセンター": "https://maps.app.goo.gl/KGdkLbNwQP6kH5Dp9",
+    "北スポーツセンター": "https://maps.app.goo.gl/fHzGe57Byc5RVqpU9",
+    "芝スポーツセンター": "https://maps.app.goo.gl/f6t3UEiKs6FVm7ZZ9",
+    "東スポーツセンター": "https://maps.app.goo.gl/zEbJjoUi2nJ7tfSM9",
+    "安行スポーツセンター": "https://maps.app.goo.gl/yruzsYEVJzjw5j2e9",
+    "鳩ヶ谷スポーツセンター": "https://maps.app.goo.gl/XLTH1qyLJMoAMjvf9",
+  }
+
   const addNewFieldToExistDocument = (updateCollection, newField, newValue) => {
     const collectionName = updateCollection;
 
@@ -213,8 +226,11 @@ function App() {
         querySnapshot.forEach((_doc) => {
           // Use the update method to add the new field to each document
           const docRef = doc(db, collectionName, _doc.id);
+          const addr = _doc.data().description;
+          newValue = googleMaps[addr];
           updateDoc(docRef, {
             [newField]: newValue,
+            updated: Timestamp.now(),
           });
         });
       })
@@ -255,7 +271,7 @@ function App() {
   };
 
   useEffect(() => {
-    // addNewFieldToExistDocument('events', 'reservedTime', '');
+    // addNewFieldToExistDocument('events', 'map', '');
     // updateData('events');
 
     const eventColRef = query(
@@ -347,6 +363,7 @@ function App() {
                   title={event.data.title}
                   account={event.data.account}
                   description={event.data.description}
+                  map={event.data.map}
                   amount={event.data.amount}
                   members={event.data.members}
                   completed={event.data.completed}
@@ -374,6 +391,35 @@ function App() {
             <EventTable events={events} onClickRow={handleEditEventClick} />
           </div>
         )}
+
+        <div className="container mx-auto py-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-8">
+            {events.map((event) => {
+              return (
+                !event.data.completed && (
+                  <EventCard
+                    id={event.id}
+                    key={event.id}
+                    title={event.data.title}
+                    account={event.data.account}
+                    description={event.data.description}
+                    amount={event.data.amount}
+                    members={event.data.members}
+                    completed={event.data.completed}
+                    note={event.data.note}
+                    deadline={event.data.deadline}
+                    participant={event.data.participant}
+                    onOkClick={handleOkClick}
+                    onCancelClick={handleCancelClick}
+                    onDoneClick={handleDoneClick}
+                    isAdmin={isAdmin}
+                  />
+                )
+              );
+            })}
+          </div>
+        </div>
+
         {isAdmin && (
           <div className="mt-10">
             {openEditUserModal && (

@@ -44,6 +44,18 @@ function AddEvent({ onClose, open }) {
     member6: true,
   });
 
+  const googleMaps = {
+    "戸田スポーツセンター": "https://maps.app.goo.gl/gLnQ2cNd6dMsWBJW9",
+    "西スポーツセンター": "https://maps.app.goo.gl/EgsquvSXjHhQqiEa8",
+    "体育武道センター": "https://maps.app.goo.gl/Gba8wyF9FUMftkHZ7",
+    "戸塚スポーツセンター": "https://maps.app.goo.gl/KGdkLbNwQP6kH5Dp9",
+    "北スポーツセンター": "https://maps.app.goo.gl/fHzGe57Byc5RVqpU9",
+    "芝スポーツセンター": "https://maps.app.goo.gl/f6t3UEiKs6FVm7ZZ9",
+    "東スポーツセンター": "https://maps.app.goo.gl/zEbJjoUi2nJ7tfSM9",
+    "安行スポーツセンター": "https://maps.app.goo.gl/yruzsYEVJzjw5j2e9",
+    "鳩ヶ谷スポーツセンター": "https://maps.app.goo.gl/XLTH1qyLJMoAMjvf9",
+  }
+
   // Define an array of users
   const users = [
     { id: "member1", name: "Thanh" },
@@ -84,6 +96,7 @@ function AddEvent({ onClose, open }) {
         title: title,
         time: new Date(reservedDate),
         description: description,
+        map: googleMaps[description],
         amount: amount,
         members: members,
         createdBy: createdBy,
