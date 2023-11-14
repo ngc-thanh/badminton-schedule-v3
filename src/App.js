@@ -19,6 +19,7 @@ import EditUser from "./components/EditUser";
 import AddEvent from "./components/AddEvent";
 import Event from "./components/Event";
 import EventCard from "./components/EventCard";
+import UserCard from "./components/UserCard";
 import EventTable from "./components/EventTable";
 import User from "./components/User";
 import UnlockModal from "./components/UnlockModal";
@@ -34,6 +35,7 @@ function App() {
   const [events, setEvents] = useState([]);
   const [users, setUsers] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [bookingDetails, setBookingDetails] = useState([]);
 
   const handleOkClick = (cardData) => {
     checkRecordExists("users", "ipAddress", localStorage.getItem("NS_KWGC"))
@@ -48,7 +50,7 @@ function App() {
 
     handleUpdateEvent(cardData);
     handleUpdateUser(1, 0, isWithin4Days(cardData.time) ? 0 : 1);
-    createBookingDetail(true, cardData.title, cardData.id);
+    createBookingDetail(true, cardData.title, cardData.id, cardData.name);
   };
 
   const isWithin4Days = (timestampField) => {
@@ -76,7 +78,7 @@ function App() {
 
     handleUpdateEvent(cardData);
     handleUpdateUser(0, 1, isWithin4Days(cardData.time) ? 0 : 1);
-    createBookingDetail(false, cardData.title, cardData.id);
+    createBookingDetail(false, cardData.title, cardData.id, cardData.removeName);
   };
 
   const handleDoneClick = (cardData) => {
@@ -146,13 +148,14 @@ function App() {
     }
   };
 
-  const createBookingDetail = async (ok, title, eventId) => {
+  const createBookingDetail = async (ok, title, eventId, name) => {
     try {
       await addDoc(collection(db, "booking_details"), {
         type: ok ? "OK" : "CANCEL",
         title: title,
         ipAddress: localStorage.getItem("NS_KWGC"),
         eventId: eventId,
+        name: name,
         created: Timestamp.now(),
         updated: Timestamp.now(),
       });
@@ -226,12 +229,42 @@ function App() {
         querySnapshot.forEach((_doc) => {
           // Use the update method to add the new field to each document
           const docRef = doc(db, collectionName, _doc.id);
-          const addr = _doc.data().description;
-          newValue = googleMaps[addr];
-          updateDoc(docRef, {
-            [newField]: newValue,
-            updated: Timestamp.now(),
-          });
+          // const addr = _doc.data().description;
+          // newValue = googleMaps[addr];
+          const ip = _doc.data().ipAddress;
+          // console.log(obj[ip]);
+          // newValue = getFirstUser(ip);
+          // console.log(newValue);
+
+          // const getFirstUser = (ipAddress) => {
+            const fieldNameToQuery = "ipAddress";
+        
+            const q = query(
+              collection(db, "users"),
+              where(fieldNameToQuery, "==", ip),
+              where("active", "==", true),
+              limit(1)
+            );
+        
+            getDocs(q)
+              .then((_querySnapshot) => {
+                _querySnapshot.forEach((__doc) => {
+                  const data = __doc.data();
+                  newValue = data.name;
+                  console.log(newValue);
+                  // console.log(data.name);
+                  // return data.name;
+                  // obj[data.ipAddress] = data.name;
+                            updateDoc(docRef, {
+                          [newField]: newValue,
+                          //   // updated: Timestamp.now(),
+                          });
+                });
+              })
+              .catch((error) => {
+                alert("Error querying Firestore:", error);
+              });
+          // }
         });
       })
       .then(() => {
@@ -250,8 +283,11 @@ function App() {
       const batch = [];
       querySnapshot.forEach((_doc) => {
         // const acc = _doc.data().account;
-        const desc = _doc.data().description;
-        const newValue = desc.split(" ")[0];
+        // const desc = _doc.data().description;
+        // const newValue = desc.split(" ")[0];
+        const ip = _doc.data().ipAddress;
+        // const newValue = getFirstUser(ip);
+        // console.log(newValue);
 
         // const oldValue = _doc.data().time.toDate(); // Replace with your field name
         // const parsedDate = new Date(oldValue);
@@ -259,10 +295,12 @@ function App() {
         // const newValue = parsedDate;
 
         const docRef = doc(db, _collection, _doc.id); // Replace with your collection name
-        batch.push(updateDoc(docRef, { description: newValue })); // Replace with your field name
+        batch.push(updateDoc(docRef, { userName: 'Thanh' })); // Replace with your field name
       });
 
-      await Promise.all(batch);
+      console.log(batch);
+
+      // await Promise.all(batch);
 
       console.log("All documents updated successfully.");
     } catch (error) {
@@ -271,8 +309,8 @@ function App() {
   };
 
   useEffect(() => {
-    // addNewFieldToExistDocument('events', 'map', '');
-    // updateData('events');
+    // addNewFieldToExistDocument('booking_details', 'userName', '');
+    // updateData('booking_details');
 
     const eventColRef = query(
       collection(db, "events"),
@@ -314,6 +352,23 @@ function App() {
       setUsers(data);
     });
 
+    const bookingDetailsColRef = query(
+      collection(db, "booking_details"),
+      orderBy("updated", "desc"),
+      limit(9),
+    );
+    onSnapshot(bookingDetailsColRef, (snapshot) => {
+      const data = [];
+      snapshot.docs.map((_doc) => {
+        data.push({
+          id: _doc.id,
+          data: _doc.data(),
+        });
+      });
+
+      setBookingDetails(data);
+    });
+
     fetch("https://api.db-ip.com/v2/free/self")
       .then((response) => response.json())
       .then((data) => {
@@ -322,12 +377,19 @@ function App() {
       });
   }, []);
 
+  // console.log(bookingDetails);
+
   return (
     <div className="App">
       <div className="flex flex-col justify-center items-center">
         {isAdmin ? (
           <button
-            onClick={() => setOpenAddModal(true)}
+            onClick={() => {
+              // console.log(obj);
+              // addNewFieldToExistDocument('booking_details', 'name', '');
+              setOpenAddModal(true);
+            }}
+
             className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md font-semibold transition duration-300 ease-in-out w-30 mt-5"
           >
             Thêm sân +
@@ -431,6 +493,19 @@ function App() {
             )}
           </div>
         )}
+
+        <div className="container mx-auto py-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-8">
+            {bookingDetails.map((booking) => {
+              // console.log(booking);
+              // addNewFieldToExistDocument('booking_details', 'name', '');
+              return (
+                  <UserCard key={booking.id} bookingDetail={booking.data}/>
+              );
+            })}
+          </div>
+        </div>
+
         {isAdmin && (
           <div className="mt-10">
             <User users={users} onClickRow={handleEditUserClick} />
