@@ -113,7 +113,7 @@ const UserCard = ({
       <div className="flex-grow">
         <div>
           <h2 className="text-xl font-semibold text-left">
-            {bookingDetail.userName}
+            {bookingDetail.name}
             </h2>
           <p className="text-gray-500 text-left">
             {bookingDetail.type === 'OK' ? 'THAM GIA' : 'HUỶ'}
