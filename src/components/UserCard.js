@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const UserCard = ({
-  bookingDetail
-}) => {
+const UserCard = ({ bookingDetail }) => {
   // console.log(bookingDetail);
   const handleOkClick = () => {
     // members.push(name);
@@ -10,17 +8,17 @@ const UserCard = ({
     // setName("");
   };
 
-  let title = bookingDetail.type === 'OK' ? 'THAM GIA' : 'HUỶ';
-  title += bookingDetail.delay ? ' (TRỄ)' : '';
+  let title = bookingDetail.type === "OK" ? "THAM GIA" : "HUỶ";
+  title += bookingDetail.delay ? " (TRỄ)" : "";
 
   const updatedDatetime = new Date(bookingDetail.updated.toDate());
   const options = {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
     hour12: false, // Use 24-hour format
   };
   const updatedAt = updatedDatetime.toLocaleString(undefined, options);
@@ -41,7 +39,6 @@ const UserCard = ({
     // const updatedMembers = members.filter(
     //   (_, index) => index !== indexToRemove
     // );
-
     // const removeName = members[indexToRemove];
     // members = updatedMembers;
     // onCancelClick({
@@ -97,7 +94,6 @@ const UserCard = ({
     //     completed: true,
     //   });
     // }
-
     // // Close the modal
     // setDeleteModalOpen(false);
   };
@@ -117,15 +113,12 @@ const UserCard = ({
         <div>
           <h2 className="text-xl font-semibold text-left">
             {bookingDetail.name}
-            </h2>
-          <p className="text-gray-500 text-left">
-            {title}
-          </p>
+          </h2>
+          <p className="text-gray-500 text-left">{bookingDetail.title}</p>
+          <p className="text-gray-500 text-left">{title}</p>
         </div>
         <div>
-          <p className="text-left">
-            {updatedAt}
-            </p>
+          <p className="text-left">{updatedAt}</p>
         </div>
       </div>
     </div>
