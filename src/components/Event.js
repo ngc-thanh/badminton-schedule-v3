@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
+import { FiAlertTriangle } from "react-icons/fi";
+import { FiX } from "react-icons/fi";
 
 const Event = ({
   id,
   title,
+  time,
   description,
   map,
   amount,
@@ -16,11 +19,12 @@ const Event = ({
   onOkClick,
   onCancelClick,
   onDoneClick,
+  onUpdateEvent,
   isAdmin,
 }) => {
   const handleOkClick = () => {
     members.push(name);
-    onOkClick({ id, title, description, amount, members, completed, name });
+    onOkClick({ id, title, description, amount, members, completed, name, deadline, time });
     setName("");
   };
 
@@ -51,7 +55,24 @@ const Event = ({
       members,
       completed: false,
       removeName,
+      deadline,
     });
+  };
+
+  const handleWarningClick = (idx) => {
+    console.log("Warning!!!!");
+
+    console.log(members);
+    const memberToMove = members.find((_, index) => index === idx);
+
+    // Remove the todo from the current position
+    const updatedMembers = members.filter((_, index) => index !== idx);
+
+    // Add the todo to the end of the list
+    members = [...updatedMembers, memberToMove];
+    console.log(members);
+
+    onUpdateEvent({ id, title, description, amount, members, completed, name, deadline, time });
   };
 
   const handleDoneClick = () => {
@@ -94,6 +115,8 @@ const Event = ({
         amount,
         members,
         completed: true,
+        deadline,
+        time
       });
     }
 
@@ -118,7 +141,10 @@ const Event = ({
           <p className="text-gray-500 text-left">
             {description} ({account})
           </p>
-          <a href={map} className="flex text-blue-500 hover:underline text-left">
+          <a
+            href={map}
+            className="flex text-blue-500 hover:underline text-left"
+          >
             Google map
           </a>
         </div>
@@ -153,12 +179,20 @@ const Event = ({
                     {index + 1}. {member}{" "}
                     {isOver && index + 1 > participant ? " (dự bị)" : ""}
                   </li>
-                  <button
-                    className="pr-5 font-semibold text-lg text-red-500"
-                    onClick={() => handleDeleteClick(index)}
-                  >
-                    ❌
-                  </button>
+                  <div className="flex items-center justify-center">
+                    <button
+                      className="pr-5 text-orange-500"
+                      onClick={() => handleWarningClick(index)}
+                    >
+                      <FiAlertTriangle className="text-2xl" />
+                    </button>
+                    <button
+                      className="pr-5 font-semibold text-lg text-red-500"
+                      onClick={() => handleDeleteClick(index)}
+                    >
+                      <FiX className="text-3xl" />
+                    </button>
+                  </div>
                 </div>
               ))}
           </ul>

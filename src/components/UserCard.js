@@ -10,6 +10,9 @@ const UserCard = ({
     // setName("");
   };
 
+  let title = bookingDetail.type === 'OK' ? 'THAM GIA' : 'HUỶ';
+  title += bookingDetail.delay ? ' (TRỄ)' : '';
+
   const updatedDatetime = new Date(bookingDetail.updated.toDate());
   const options = {
     year: 'numeric',
@@ -116,7 +119,7 @@ const UserCard = ({
             {bookingDetail.name}
             </h2>
           <p className="text-gray-500 text-left">
-            {bookingDetail.type === 'OK' ? 'THAM GIA' : 'HUỶ'}
+            {title}
           </p>
         </div>
         <div>

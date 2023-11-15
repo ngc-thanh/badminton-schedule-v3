@@ -41,7 +41,7 @@ function App() {
     checkRecordExists("users", "ipAddress", localStorage.getItem("NS_KWGC"))
       .then((exists) => {
         if (!exists) {
-          createUser(cardData.name);
+          createUser(cardData.name, 1, 0, isWithin4Days(cardData.deadline));
         }
       })
       .catch((error) => {
@@ -49,8 +49,8 @@ function App() {
       });
 
     handleUpdateEvent(cardData);
-    handleUpdateUser(1, 0, isWithin4Days(cardData.time) ? 0 : 1);
-    createBookingDetail(true, cardData.title, cardData.id, cardData.name);
+    // handleUpdateUser(1, 0, isWithin4Days(cardData.deadline) ? 0 : 1);
+    createBookingDetail(true, cardData.title, cardData.id, cardData.name, cardData);
   };
 
   const isWithin4Days = (timestampField) => {
@@ -58,18 +58,29 @@ function App() {
       return false;
     }
 
-    const currentTime = new Date();
-    const fourDaysAgo = new Date();
-    fourDaysAgo.setDate(fourDaysAgo.getDate() - 4);
+    let currentTime = new Date();
+    let fourDaysAgo = new Date(timestampField.toDate());
 
-    return currentTime < timestampField && timestampField > fourDaysAgo;
+    const options = {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      // hour: 'numeric',
+      // minute: 'numeric',
+      // second: 'numeric',
+      // hour12: false, // Use 24-hour format
+    };
+    currentTime = currentTime.toLocaleString(undefined, options);
+    fourDaysAgo = fourDaysAgo.toLocaleString(undefined, options);
+
+    return currentTime > fourDaysAgo;
   };
 
   const handleCancelClick = (cardData) => {
     checkRecordExists("users", "ipAddress", localStorage.getItem("NS_KWGC"))
       .then((exists) => {
         if (!exists) {
-          createUser(cardData.removeName);
+          createUser(cardData.removeName, 0, 1, isWithin4Days(cardData.deadline));
         }
       })
       .catch((error) => {
@@ -77,8 +88,8 @@ function App() {
       });
 
     handleUpdateEvent(cardData);
-    handleUpdateUser(0, 1, isWithin4Days(cardData.time) ? 0 : 1);
-    createBookingDetail(false, cardData.title, cardData.id, cardData.removeName);
+    // handleUpdateUser(0, 1, isWithin4Days(cardData.time) ? 0 : 1);
+    createBookingDetail(false, cardData.title, cardData.id, cardData.removeName, cardData);
   };
 
   const handleDoneClick = (cardData) => {
@@ -148,7 +159,7 @@ function App() {
     }
   };
 
-  const createBookingDetail = async (ok, title, eventId, name) => {
+  const createBookingDetail = async (ok, title, eventId, name, cardData) => {
     try {
       await addDoc(collection(db, "booking_details"), {
         type: ok ? "OK" : "CANCEL",
@@ -156,6 +167,7 @@ function App() {
         ipAddress: localStorage.getItem("NS_KWGC"),
         eventId: eventId,
         name: name,
+        delay: isWithin4Days(cardData.deadline),
         created: Timestamp.now(),
         updated: Timestamp.now(),
       });
@@ -164,14 +176,14 @@ function App() {
     }
   };
 
-  const createUser = async (newMember) => {
+  const createUser = async (newMember, ok = 0, cancel = 0, delay = 0) => {
     try {
       await addDoc(collection(db, "users"), {
         ipAddress: localStorage.getItem("NS_KWGC"),
         name: newMember,
-        ok: 0,
-        cancel: 0,
-        delay: 0,
+        ok: ok,
+        cancel: cancel,
+        delay: delay,
         point: 0,
         active: true,
         created: Timestamp.now(),
@@ -229,42 +241,10 @@ function App() {
         querySnapshot.forEach((_doc) => {
           // Use the update method to add the new field to each document
           const docRef = doc(db, collectionName, _doc.id);
-          // const addr = _doc.data().description;
-          // newValue = googleMaps[addr];
-          const ip = _doc.data().ipAddress;
-          // console.log(obj[ip]);
-          // newValue = getFirstUser(ip);
-          // console.log(newValue);
-
-          // const getFirstUser = (ipAddress) => {
-            const fieldNameToQuery = "ipAddress";
-        
-            const q = query(
-              collection(db, "users"),
-              where(fieldNameToQuery, "==", ip),
-              where("active", "==", true),
-              limit(1)
-            );
-        
-            getDocs(q)
-              .then((_querySnapshot) => {
-                _querySnapshot.forEach((__doc) => {
-                  const data = __doc.data();
-                  newValue = data.name;
-                  console.log(newValue);
-                  // console.log(data.name);
-                  // return data.name;
-                  // obj[data.ipAddress] = data.name;
-                            updateDoc(docRef, {
-                          [newField]: newValue,
-                          //   // updated: Timestamp.now(),
-                          });
-                });
-              })
-              .catch((error) => {
-                alert("Error querying Firestore:", error);
-              });
-          // }
+            updateDoc(docRef, {
+              [newField]: newValue,
+          //   // updated: Timestamp.now(),
+          });
         });
       })
       .then(() => {
@@ -309,7 +289,7 @@ function App() {
   };
 
   useEffect(() => {
-    // addNewFieldToExistDocument('booking_details', 'userName', '');
+    // addNewFieldToExistDocument('booking_details', 'delay', false);
     // updateData('booking_details');
 
     const eventColRef = query(
@@ -336,21 +316,21 @@ function App() {
       setEvents(data);
     });
 
-    const userColRef = query(
-      collection(db, "users"),
-      orderBy("updated", "desc")
-    );
-    onSnapshot(userColRef, (snapshot) => {
-      const data = [];
-      snapshot.docs.map((_doc) => {
-        data.push({
-          id: _doc.id,
-          data: _doc.data(),
-        });
-      });
+    // const userColRef = query(
+    //   collection(db, "users"),
+    //   orderBy("updated", "desc")
+    // );
+    // onSnapshot(userColRef, (snapshot) => {
+    //   const data = [];
+    //   snapshot.docs.map((_doc) => {
+    //     data.push({
+    //       id: _doc.id,
+    //       data: _doc.data(),
+    //     });
+    //   });
 
-      setUsers(data);
-    });
+    //   setUsers(data);
+    // });
 
     const bookingDetailsColRef = query(
       collection(db, "booking_details"),
@@ -422,6 +402,7 @@ function App() {
                 <Event
                   id={event.id}
                   key={event.id}
+                  time={event.data.time}
                   title={event.data.title}
                   account={event.data.account}
                   description={event.data.description}
@@ -435,6 +416,7 @@ function App() {
                   onOkClick={handleOkClick}
                   onCancelClick={handleCancelClick}
                   onDoneClick={handleDoneClick}
+                  onUpdateEvent={handleUpdateEvent}
                   isAdmin={isAdmin}
                 />
               )
@@ -506,11 +488,11 @@ function App() {
           </div>
         </div>
 
-        {isAdmin && (
+        {/* {isAdmin && (
           <div className="mt-10">
             <User users={users} onClickRow={handleEditUserClick} />
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
