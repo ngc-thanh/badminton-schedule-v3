@@ -204,7 +204,7 @@ const Event = ({
                     {isOver && index + 1 > participant ? " (dự bị)" : ""}
                   </li>
                   <div className="flex items-center justify-center">
-                    {!isAdmin && (
+                    {isAdmin && (
                       <button
                         className="pr-5 text-orange-500"
                         onClick={() => handleWarningClick(index)}
