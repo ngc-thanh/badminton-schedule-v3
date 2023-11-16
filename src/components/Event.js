@@ -152,9 +152,9 @@ const Event = ({
 
   useEffect(() => {
     setIsOver(members.length >= participant);
-    if (isSameDay) {
-      members.sort();
-    }
+    // if (isSameDay) {
+    //   members.sort();
+    // }
   }, [members]);
 
   return (
@@ -204,14 +204,14 @@ const Event = ({
                     {isOver && index + 1 > participant ? " (dự bị)" : ""}
                   </li>
                   <div className="flex items-center justify-center">
-                    {!isSameDay && (
+                    {/* {!isSameDay && ( */}
                       <button
                         className="pr-5 text-orange-500"
                         onClick={() => handleWarningClick(index)}
                       >
                         <FiAlertTriangle className="text-2xl" />
                       </button>
-                    )}
+                    {/* )} */}
                     <button
                       className="pr-5 font-semibold text-lg text-red-500"
                       onClick={() => handleDeleteClick(index)}
