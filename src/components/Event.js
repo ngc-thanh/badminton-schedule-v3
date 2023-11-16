@@ -16,6 +16,7 @@ const Event = ({
   account,
   deadline,
   participant,
+  isSameDay,
   onOkClick,
   onCancelClick,
   onDoneClick,
@@ -131,6 +132,9 @@ const Event = ({
 
   useEffect(() => {
     setIsOver(members.length >= participant);
+    if (isSameDay) {
+      members.sort();
+    }
   }, [members]);
 
   return (

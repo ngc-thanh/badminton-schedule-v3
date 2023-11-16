@@ -9,6 +9,7 @@ import {
   getDocs,
   updateDoc,
   addDoc,
+  getDoc,
   Timestamp,
   limit,
 } from "firebase/firestore";
@@ -241,11 +242,51 @@ function App() {
         querySnapshot.forEach((_doc) => {
           // Use the update method to add the new field to each document
           const docRef = doc(db, collectionName, _doc.id);
+          // const id = _doc.data().eventId;
+          // console.log(obj[ip]);
+          // newValue = getFirstUser(ip);
+          // console.log(newValue);
+          // const getFirstUser = (ipAddress) => {
+          // const docR = doc(db, 'events', id);
+
+          // getDoc(docR).then((dt) => {
+          //   const tmp = dt.data();
+          //   console.log(tmp);
+          //   if (tmp.deadline) {
+          //     newValue = isWithin4Days(tmp.deadline);
+          //   } else {
+          //     console.log(dt.id);
+          //   }
+
+          //   console.log(newValue);
             updateDoc(docRef, {
               [newField]: newValue,
-          //   // updated: Timestamp.now(),
+            });
           });
-        });
+
+            
+          
+        
+            // getDocs(q)
+            //   .then((_querySnapshot) => {
+            //     _querySnapshot.forEach((__doc) => {
+            //       const data = __doc.data();
+            //       newValue = isWithin4Days(data.deadline);
+            //       console.log(newValue);
+            //       // console.log(data.name);
+            //       // return data.name;
+            //       // obj[data.ipAddress] = data.name;
+            //                 updateDoc(docRef, {
+            //               [newField]: newValue,
+            //               //   // updated: Timestamp.now(),
+            //               });
+            //     });
+            //   })
+            //   .catch((error) => {
+            //     alert("Error querying Firestore:", error);
+            //   });
+          // }
+        // });
       })
       .then(() => {
         console.log("Added the new field to all documents in the collection.");
@@ -289,7 +330,7 @@ function App() {
   };
 
   useEffect(() => {
-    // addNewFieldToExistDocument('booking_details', 'delay', false);
+    // addNewFieldToExistDocument('events', 'isSameDay', false);
     // updateData('booking_details');
 
     const eventColRef = query(
@@ -413,6 +454,7 @@ function App() {
                   note={event.data.note}
                   deadline={event.data.deadline}
                   participant={event.data.participant}
+                  isSameDay={event.data.isSameDay}
                   onOkClick={handleOkClick}
                   onCancelClick={handleCancelClick}
                   onDoneClick={handleDoneClick}

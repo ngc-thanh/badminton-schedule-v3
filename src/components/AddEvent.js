@@ -13,7 +13,7 @@ function AddEvent({ onClose, open }) {
     "北スポーツセンター",
     "芝スポーツセンター",
     "東スポーツセンター",
-    "安行スポーツセンター"
+    "安行スポーツセンター",
   ];
 
   // Define an array of options
@@ -45,16 +45,16 @@ function AddEvent({ onClose, open }) {
   });
 
   const googleMaps = {
-    "戸田スポーツセンター": "https://maps.app.goo.gl/gLnQ2cNd6dMsWBJW9",
-    "西スポーツセンター": "https://maps.app.goo.gl/EgsquvSXjHhQqiEa8",
-    "体育武道センター": "https://maps.app.goo.gl/Gba8wyF9FUMftkHZ7",
-    "戸塚スポーツセンター": "https://maps.app.goo.gl/KGdkLbNwQP6kH5Dp9",
-    "北スポーツセンター": "https://maps.app.goo.gl/fHzGe57Byc5RVqpU9",
-    "芝スポーツセンター": "https://maps.app.goo.gl/f6t3UEiKs6FVm7ZZ9",
-    "東スポーツセンター": "https://maps.app.goo.gl/zEbJjoUi2nJ7tfSM9",
-    "安行スポーツセンター": "https://maps.app.goo.gl/yruzsYEVJzjw5j2e9",
-    "鳩ヶ谷スポーツセンター": "https://maps.app.goo.gl/XLTH1qyLJMoAMjvf9",
-  }
+    戸田スポーツセンター: "https://maps.app.goo.gl/gLnQ2cNd6dMsWBJW9",
+    西スポーツセンター: "https://maps.app.goo.gl/EgsquvSXjHhQqiEa8",
+    体育武道センター: "https://maps.app.goo.gl/Gba8wyF9FUMftkHZ7",
+    戸塚スポーツセンター: "https://maps.app.goo.gl/KGdkLbNwQP6kH5Dp9",
+    北スポーツセンター: "https://maps.app.goo.gl/fHzGe57Byc5RVqpU9",
+    芝スポーツセンター: "https://maps.app.goo.gl/f6t3UEiKs6FVm7ZZ9",
+    東スポーツセンター: "https://maps.app.goo.gl/zEbJjoUi2nJ7tfSM9",
+    安行スポーツセンター: "https://maps.app.goo.gl/yruzsYEVJzjw5j2e9",
+    鳩ヶ谷スポーツセンター: "https://maps.app.goo.gl/XLTH1qyLJMoAMjvf9",
+  };
 
   // Define an array of users
   const users = [
@@ -78,6 +78,7 @@ function AddEvent({ onClose, open }) {
   const [account, setAccount] = useState(accounts[0]);
   const [reservedDate, setReservedDate] = useState("");
   const [reservedTime, setReservedTime] = useState("");
+  const [sameDay, setSameDay] = useState(false);
 
   // Function to handle checkbox changes
   const handleCheckboxChange = (e) => {
@@ -91,6 +92,7 @@ function AddEvent({ onClose, open }) {
   /* function to add new task to firestore */
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(sameDay);
     try {
       await addDoc(collection(db, "events"), {
         title: title,
@@ -107,6 +109,7 @@ function AddEvent({ onClose, open }) {
         reservedTime: reservedTime,
         account: account,
         deadline: new Date(deadline),
+        sameDay: sameDay,
         created: Timestamp.now(),
         updated: Timestamp.now(),
       });
@@ -135,7 +138,7 @@ function AddEvent({ onClose, open }) {
   return (
     <AddEventModal modalLabel="THÊM SÂN" onClose={onClose} open={open}>
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 gap-x-4">
+        <div className="grid grid-cols-3 gap-x-4">
           <div className="mb-1">
             <label
               htmlFor="reserved_date"
@@ -173,6 +176,24 @@ function AddEvent({ onClose, open }) {
               placeholder="19-21H"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200 focus:outline-none h-12"
             />
+          </div>
+          <div className="mb-1">
+            <label
+              htmlFor="same_day"
+              className="block text-gray-700 font-semibold text-left mb-1"
+            >
+              Cùng ngày
+            </label>
+            <label className="flex items-center">
+              <input
+                id="same_day"
+                name="same_day"
+                type="checkbox"
+                checked={sameDay}
+                onChange={() => setSameDay(!sameDay)}
+                className="mt-4 ml-8"
+              />
+            </label>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
