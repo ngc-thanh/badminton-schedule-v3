@@ -25,7 +25,17 @@ const Event = ({
 }) => {
   const handleOkClick = () => {
     members.push(name);
-    onOkClick({ id, title, description, amount, members, completed, name, deadline, time });
+    onOkClick({
+      id,
+      title,
+      description,
+      amount,
+      members,
+      completed,
+      name,
+      deadline,
+      time,
+    });
     setName("");
   };
 
@@ -73,7 +83,17 @@ const Event = ({
     members = [...updatedMembers, memberToMove];
     console.log(members);
 
-    onUpdateEvent({ id, title, description, amount, members, completed, name, deadline, time });
+    onUpdateEvent({
+      id,
+      title,
+      description,
+      amount,
+      members,
+      completed,
+      name,
+      deadline,
+      time,
+    });
   };
 
   const handleDoneClick = () => {
@@ -117,7 +137,7 @@ const Event = ({
         members,
         completed: true,
         deadline,
-        time
+        time,
       });
     }
 
@@ -184,12 +204,14 @@ const Event = ({
                     {isOver && index + 1 > participant ? " (dự bị)" : ""}
                   </li>
                   <div className="flex items-center justify-center">
-                    <button
-                      className="pr-5 text-orange-500"
-                      onClick={() => handleWarningClick(index)}
-                    >
-                      <FiAlertTriangle className="text-2xl" />
-                    </button>
+                    {!isSameDay && (
+                      <button
+                        className="pr-5 text-orange-500"
+                        onClick={() => handleWarningClick(index)}
+                      >
+                        <FiAlertTriangle className="text-2xl" />
+                      </button>
+                    )}
                     <button
                       className="pr-5 font-semibold text-lg text-red-500"
                       onClick={() => handleDeleteClick(index)}
