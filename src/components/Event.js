@@ -198,7 +198,7 @@ const Event = ({
           <ul className="list-disc list-inside list-none">
             {members &&
               members.map((member, index) => (
-                <div key={index} className="flex justify-between mb-1">
+                <div key={index} className="flex items-center justify-between mb-1">
                   <li className="text-left">
                     {index + 1}. {member}{" "}
                     {isOver && index + 1 > participant ? " (dự bị)" : ""}
